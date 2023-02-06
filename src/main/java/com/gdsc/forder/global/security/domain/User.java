@@ -3,15 +3,12 @@ package com.gdsc.forder.global.security.domain;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -21,14 +18,17 @@ import java.util.stream.Collectors;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User implements UserDetails{
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(length = 45, nullable = false, unique = true)
     private String email;
+
+    @Column(name = "user_name", length = 45)
+    private String username;
 
     @Column(length = 200, nullable = false)
     private String password;
@@ -37,44 +37,64 @@ public class User implements UserDetails{
     @Column(nullable = false)
     private Role role;
 
-    @Builder
-    public User(String email, String encodedPassword, Role role) {
-        this.email = email;
-        this.password = encodedPassword;
-        this.role = role;
+
+    public Role getRoles() {
+        return this.role;
     }
 
-    private Collection<SimpleGrantedAuthority> authorities;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
+    public Set<GrantedAuthority> getAuthorities() {
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority(this.role.name()));
+        return authorities;
     }
 
-    @Override
-    public String getUsername() {
-        return email;
+    public void encodePassword(BCryptPasswordEncoder passwordEncoder){
+        this.password = passwordEncoder.encode(password);
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
+    public boolean checkPassword(BCryptPasswordEncoder passwordEncoder, String input_password) {
+        return passwordEncoder.matches(input_password, this.password);
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+//    @Builder
+//    public User(String email, String encodedPassword, Role role) {
+//        this.email = email;
+//        this.password = encodedPassword;
+//        this.role = role;
+//    }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
+//    private Collection<SimpleGrantedAuthority> authorities;
+//
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        return this.authorities;
+//    }
+//
+//    @Override
+//    public String getUsername() {
+//        return email;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isEnabled() {
+//        return true;
+//    }
 
 
 //    @Id

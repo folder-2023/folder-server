@@ -5,6 +5,9 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,13 +23,16 @@ import java.util.List;
 // 토큰을 생성하고 검증하는 클래스입니다.
 // 해당 컴포넌트는 필터클래스에서 사전 검증을 거침
 @RequiredArgsConstructor
+@Slf4j
 @Component
+@PropertySource("classpath:application.properties")
 public class JwtTokenProvider {
 
-    private String secretKey = "foldertest";
+    @Value("${jwt.secret.key}")
+    private String secretKey;
 
-    // 토큰 유효시간 30분
-    private long tokenValidTime = 30 * 60 * 1000L;
+    @Value("${jwt.valid.time}")
+    private long tokenValidTime;
 
     private final UserDetailsService userDetailsService;
 
@@ -37,15 +43,16 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성
-    public String createToken(String userPk) {
+    public String createToken(String userPk, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보단위
+        claims.put("roles", roles); // 정보는 key/value 쌍으로 저장됩니다.
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims) // 정보 저장
                 .setIssuedAt(now) // 토큰 발행 시간 정보
                 .setExpiration(new Date(now.getTime() + tokenValidTime)) // set Expire Time
-                .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘과
-                // signature 에 들어갈 secret값 세팅
+                .signWith(SignatureAlgorithm.HS256, secretKey)  // 사용할 암호화 알고리즘
+                // signature 에 들어갈 secret 값 세팅
                 .compact();
     }
 
