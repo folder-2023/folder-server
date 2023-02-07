@@ -3,6 +3,7 @@ package com.gdsc.forder.global.security.controller;
 import com.gdsc.forder.global.security.domain.User;
 import com.gdsc.forder.global.security.dto.JoinUserDTO;
 import com.gdsc.forder.global.security.dto.LoginUserDTO;
+import com.gdsc.forder.global.security.dto.UserDTO;
 import com.gdsc.forder.global.security.provider.JwtTokenProvider;
 import com.gdsc.forder.global.security.repository.UserRepository;
 import com.gdsc.forder.global.security.service.CustomUserDetailService;
@@ -27,7 +28,7 @@ public class UserController {
     private final CustomUserDetailService customUserDetailService;
 
     @GetMapping("/me")
-    public User getCurrentUser(@ApiIgnore Principal principal) {
+    public UserDTO getCurrentUser(@ApiIgnore Principal principal) {
         try{
             return customUserDetailService.findUser(principal);
         }catch (NullPointerException e){

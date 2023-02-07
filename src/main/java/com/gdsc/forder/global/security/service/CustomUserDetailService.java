@@ -24,9 +24,9 @@ public class CustomUserDetailService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
-    public User findUser(Principal principal){
-        Optional<User> user = userRepository.findByLoginId(principal.getName());
-        return user.get();
+    public UserDTO findUser(Principal principal){
+        User user = userRepository.findByLoginId(principal.getName()).get();
+        return UserDTO.fromEntity(user);
     }
 
     @Override
