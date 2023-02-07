@@ -47,8 +47,8 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    @Column(name = "user_code", length = 50, unique = true)
-    private String userCode;
+    @Column(name = "user_code", unique = true)
+    private long userCode;
 
     @Column(name = "phone", length = 50)
     private String phone;
@@ -59,6 +59,11 @@ public class User {
     @Column(name = "sleep_time")
     private LocalTime sleepTime;
 
+    @PrePersist
+    public void setUserCode(){
+        long random = LocalTime.now().getNano();
+        this.userCode = random;
+    }
 
     public Role getRoles() {
         return this.role;
