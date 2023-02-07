@@ -1,12 +1,18 @@
 package com.gdsc.forder.global.security.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,21 +27,37 @@ import java.util.Set;
 public class User {
 
     @Id
+    @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long Id;
 
-    @Column(length = 45, nullable = false, unique = true)
-    private String email;
+    @Column(name = "family_id")
+    private Integer familyId;
 
-    @Column(name = "user_name", length = 45)
-    private String username;
+    @Column(name = "login_id", length = 50, unique = true)
+    private String loginId;
 
-    @Column(length = 200, nullable = false)
+    @Column(name = "password", length = 200)
     private String password;
+
+    @Column(name = "user_name", length = 50)
+    private String username;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+
+    @Column(name = "user_code", length = 50, unique = true)
+    private String userCode;
+
+    @Column(name = "phone", length = 50)
+    private String phone;
+
+    @Column(name = "wake_time")
+    private LocalTime wakeTime;
+
+    @Column(name = "sleep_time")
+    private LocalTime sleepTime;
 
 
     public Role getRoles() {
@@ -55,81 +77,4 @@ public class User {
     public boolean checkPassword(BCryptPasswordEncoder passwordEncoder, String input_password) {
         return passwordEncoder.matches(input_password, this.password);
     }
-
-
-//    @Builder
-//    public User(String email, String encodedPassword, Role role) {
-//        this.email = email;
-//        this.password = encodedPassword;
-//        this.role = role;
-//    }
-
-//    private Collection<SimpleGrantedAuthority> authorities;
-//
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return this.authorities;
-//    }
-//
-//    @Override
-//    public String getUsername() {
-//        return email;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isAccountNonLocked() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isCredentialsNonExpired() {
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean isEnabled() {
-//        return true;
-//    }
-
-
-//    @Id
-//    @Column(name = "user_id")
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long userId;
-//
-//    @Column(name = "family_id")
-//    private Integer familyId;
-//
-//    @Column(name = "login_id", length = 50, unique = true)
-//    private String login_id;
-//
-//    @Column(name = "password", length = 50)
-//    private String password;
-//
-//    @Column(name = "user_name", length = 50)
-//    private String userName;
-//
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private Role role;
-//
-//    @Column(name = "user_code", length = 50, unique = true)
-//    private String userCode;
-//
-//    @Column(name = "phone", length = 50)
-//    private String phone;
-//
-//    @Column(name = "wake_time")
-//    private LocalDateTime wakeTime;
-//
-//    @Column(name = "sleep_time")
-//    private LocalDateTime sleepTime;
-//
-//    public Member orElseThrow(Object o) {
-//    }
 }

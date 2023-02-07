@@ -25,13 +25,13 @@ public class CustomUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
     public User findUser(Principal principal){
-        Optional<User> user = userRepository.findByEmail(principal.getName());
+        Optional<User> user = userRepository.findByLoginId(principal.getName());
         return user.get();
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByEmail(username)
+        return userRepository.findByLoginId(username)
                 .map(UserDetailImpl::new)
                 .orElseThrow(()-> new UsernameNotFoundException("사용자를 찾을 수 없습니다"));
     }

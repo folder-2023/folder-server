@@ -27,8 +27,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Long singUp(JoinUserDTO joinUserDTO) throws Exception {
-        if (userRepository.findByEmail(joinUserDTO.getEmail()).isPresent()){
-            throw new Exception("이미 존재하는 이메일입니다.");
+        if (userRepository.findByLoginId(joinUserDTO.getLoginId()).isPresent()){
+            throw new Exception("이미 존재하는 아이디입니다.");
         }
         if (!joinUserDTO.getPassword().equals(joinUserDTO.getCheckedPassword())){
             throw new Exception("비밀번호가 일치하지 않습니다.");
@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String login(LoginUserDTO users) {
-        User user = userRepository.findByEmail(users.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 Email 입니다."));
+        User user = userRepository.findByLoginId(users.getLoginId())
+                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디 입니다."));
 
         String password = users.getPassword();
         if (!user.checkPassword(passwordEncoder, password )) {
@@ -54,6 +54,6 @@ public class UserServiceImpl implements UserService {
         List<String> roles = new ArrayList<>();
         roles.add(user.getRoles().toString());
 
-        return jwtTokenProvider.createToken(user.getEmail(), roles);
+        return jwtTokenProvider.createToken(user.getLoginId(), roles);
     }
 }
