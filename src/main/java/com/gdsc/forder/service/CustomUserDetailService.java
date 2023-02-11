@@ -1,10 +1,9 @@
-package com.gdsc.forder.global.security.service;
+package com.gdsc.forder.service;
 
-import com.gdsc.forder.global.security.domain.User;
-import com.gdsc.forder.global.security.domain.UserDetailImpl;
-import com.gdsc.forder.global.security.dto.LoginUserDTO;
-import com.gdsc.forder.global.security.dto.UserDTO;
-import com.gdsc.forder.global.security.repository.UserRepository;
+import com.gdsc.forder.domain.User;
+import com.gdsc.forder.domain.UserDetailImpl;
+import com.gdsc.forder.dto.UserDTO;
+import com.gdsc.forder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor

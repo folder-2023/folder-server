@@ -1,18 +1,15 @@
-package com.gdsc.forder.global.config;
+package com.gdsc.forder.config;
 
 
-import com.gdsc.forder.global.security.filter.JwtAuthenticationFilter;
-import com.gdsc.forder.global.security.provider.JwtTokenProvider;
+import com.gdsc.forder.filter.JwtAuthenticationFilter;
+import com.gdsc.forder.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @RequiredArgsConstructor

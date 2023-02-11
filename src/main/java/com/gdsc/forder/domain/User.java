@@ -1,19 +1,16 @@
-package com.gdsc.forder.global.security.domain;
+package com.gdsc.forder.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -58,6 +55,10 @@ public class User {
 
     @Column(name = "sleep_time")
     private LocalTime sleepTime;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<UserFill> fills = new ArrayList<>();
 
     @PrePersist
     public void setUserCode(){

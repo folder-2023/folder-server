@@ -1,18 +1,14 @@
-package com.gdsc.forder.global.security.dto;
+package com.gdsc.forder.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.gdsc.forder.global.security.domain.Role;
-import com.gdsc.forder.global.security.domain.User;
+import com.gdsc.forder.domain.Role;
+import com.gdsc.forder.domain.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Date;
 
 @Data
 @NoArgsConstructor

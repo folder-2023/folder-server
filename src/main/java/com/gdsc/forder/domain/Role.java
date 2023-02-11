@@ -1,4 +1,4 @@
-package com.gdsc.forder.global.security.domain;
+package com.gdsc.forder.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

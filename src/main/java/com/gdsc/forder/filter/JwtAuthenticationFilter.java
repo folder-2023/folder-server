@@ -1,6 +1,6 @@
-package com.gdsc.forder.global.security.filter;
+package com.gdsc.forder.filter;
 
-import com.gdsc.forder.global.security.provider.JwtTokenProvider;
+import com.gdsc.forder.provider.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

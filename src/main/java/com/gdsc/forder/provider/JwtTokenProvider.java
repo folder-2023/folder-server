@@ -1,4 +1,4 @@
-package com.gdsc.forder.global.security.provider;
+package com.gdsc.forder.provider;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

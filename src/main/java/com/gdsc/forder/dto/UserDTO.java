@@ -1,7 +1,7 @@
-package com.gdsc.forder.global.security.dto;
+package com.gdsc.forder.dto;
 
-import com.gdsc.forder.global.security.domain.Role;
-import com.gdsc.forder.global.security.domain.User;
+import com.gdsc.forder.domain.Role;
+import com.gdsc.forder.domain.User;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
