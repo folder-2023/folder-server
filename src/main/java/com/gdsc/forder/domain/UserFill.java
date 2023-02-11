@@ -3,6 +3,7 @@ package com.gdsc.forder.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -27,5 +28,10 @@ public class UserFill {
 
     @Column(name = "fill_check")
     private Boolean fillCheck;
+
+    @PrePersist
+    public void prePersist() {
+        this.fillCheck = this.fillCheck != null && this.fillCheck;
+    }
 
 }

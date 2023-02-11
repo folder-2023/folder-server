@@ -1,16 +1,13 @@
 package com.gdsc.forder.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,7 +17,7 @@ public class AddFillDTO {
     @ApiModelProperty()
     private List<String> fills = new ArrayList<>();
 
-    @ApiModelProperty()
+    @ApiModelProperty(example = "12:00")
     private List<String> fillTimes = new ArrayList<>();
 
 }
