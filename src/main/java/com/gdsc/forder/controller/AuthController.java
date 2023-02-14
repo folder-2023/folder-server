@@ -2,7 +2,7 @@ package com.gdsc.forder.controller;
 
 import com.gdsc.forder.dto.*;
 import com.gdsc.forder.service.CustomUserDetailService;
-import com.gdsc.forder.service.UserServiceImpl;
+import com.gdsc.forder.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -19,7 +19,7 @@ import java.security.Principal;
 @RestController
 public class AuthController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final CustomUserDetailService customUserDetailService;
 
     @GetMapping("/me")

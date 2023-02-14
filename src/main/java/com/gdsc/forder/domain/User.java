@@ -41,8 +41,11 @@ public class User {
     private String username;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column()
     private Role role;
+
+    @Column(nullable = false)
+    private Boolean guard;
 
     @Column(name = "user_code", unique = true)
     private long userCode;

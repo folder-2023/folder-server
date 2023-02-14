@@ -41,8 +41,9 @@ public class JoinUserDTO {
 
     private String checkedPassword;
 
-    @ApiModelProperty
-    private Role role;
+    @ApiModelProperty(example = "보호자 여부 false/true")
+    private Boolean guard;
+
 
     @Builder
     public User toEntity(){
@@ -53,7 +54,7 @@ public class JoinUserDTO {
                 .phone(phone)
                 .wakeTime(wakeTime)
                 .sleepTime(sleepTime)
-                .role(role)
+                .guard(guard)
                 .build();
     }
 }
