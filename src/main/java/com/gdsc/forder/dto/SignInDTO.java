@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 public class SignInDTO {
 
-    private JoinUserDTO joinUserDTO;
-    private AddFillDTO addFillDTO;
+    private String accessToken;
+    private UserDTO user;
+
 }

@@ -37,13 +37,13 @@ public class AuthController {
     @PostMapping("/join")
     @ApiResponse(
             code = 200
-            , message = "UserDTO 반환"
+            , message = "accessToken, userDTO 반환"
     )
     @ApiOperation(value = "회원가입 엔드포인트" , notes =
             "JoinUserDTO에 맞춰서 requestBody로 회원정보를 입력한다." +
                     "약 정보는 string list로 입력하고 parameter로 보낸다 " +
             "fillTimes는 HH:mm 형식으로 작성한다. ")
-    public UserDTO join(@Valid @RequestBody JoinUserDTO joinUserDTO, @ModelAttribute AddFillDTO addFillDTO) throws Exception {
+    public SignInDTO join(@Valid @RequestBody JoinUserDTO joinUserDTO, @ModelAttribute AddFillDTO addFillDTO) throws Exception {
 
         UserDTO user = userService.singUp(joinUserDTO);
         Long userId = user.getId();
@@ -51,7 +51,13 @@ public class AuthController {
         if(addFillDTO.getFills().size() > 0){
             userService.addFill(addFillDTO, userId);
         }
-        return user;
+
+        LoginUserDTO loginUserDTO = new LoginUserDTO();
+        loginUserDTO.setLoginId(joinUserDTO.getLoginId());
+        loginUserDTO.setPassword(joinUserDTO.getPassword());
+        String accessToken = userService.login(loginUserDTO);
+
+        return new SignInDTO(accessToken, user);
     }
 
     @PostMapping("/login")
