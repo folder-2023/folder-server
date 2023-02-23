@@ -29,7 +29,7 @@ public class User {
     private Long Id;
 
     @Column(name = "family_id")
-    private Integer familyId;
+    private Long familyId;
 
     @Column(name = "login_id", length = 50, unique = true)
     private String loginId;

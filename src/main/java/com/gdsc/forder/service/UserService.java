@@ -108,4 +108,19 @@ public class UserService {
         }
         return result;
     }
+
+    public String findByUserCode(Long userCode){
+        User family = userRepository.findByUserCode(userCode).get();
+        return family.getUsername();
+    }
+
+    public UserDTO addFamily(Long userId, Long userCode){
+        User user = userRepository.findById(userId).get();
+        User family = userRepository.findByUserCode(userCode).get();
+        user.setFamilyId(family.getId());
+        userRepository.save(user);
+        family.setFamilyId(userId);
+        userRepository.save(family);
+        return UserDTO.fromEntity(family);
+    }
 }

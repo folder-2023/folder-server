@@ -30,4 +30,6 @@ public class MainController {
         UserDTO user = customUserDetailService.findUser(principal);
         return oldService.getFillInfo(user.getId());
     }
+
+
 }

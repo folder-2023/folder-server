@@ -7,6 +7,7 @@ import com.gdsc.forder.dto.GetFillDTO;
 import com.gdsc.forder.repository.UserFillRepository;
 import com.gdsc.forder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class OldService {
     private final UserRepository userRepository;
     private final UserFillRepository userFillRepository;
 
+//    private final ApplicationEventPublisher eventPublisher;
 
     public List<GetFillDTO> getFillInfo(Long userId){
         User user = userRepository.findById(userId).get();

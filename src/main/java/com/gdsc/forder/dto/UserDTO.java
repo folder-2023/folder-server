@@ -24,7 +24,7 @@ public class UserDTO {
     private LocalTime wakeTime;
     private LocalTime sleepTime;
     private String phone;
-    private Integer familyId;
+    private Long familyId;
     private Role roles;
 
     public static UserDTO fromEntity(User user){
