@@ -1,9 +1,8 @@
 package com.gdsc.forder.controller;
 
-import com.gdsc.forder.dto.AddFamilyDTO;
-import com.gdsc.forder.dto.LoginUserDTO;
-import com.gdsc.forder.dto.UserDTO;
+import com.gdsc.forder.dto.*;
 import com.gdsc.forder.service.CustomUserDetailService;
+import com.gdsc.forder.service.OldService;
 import com.gdsc.forder.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
+import java.util.List;
 
 @Api(tags = "마이 페이지 API")
 @RestController
@@ -22,6 +22,7 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
+    private final OldService oldService;
     private final CustomUserDetailService customUserDetailService;
 
     @PostMapping("/family")
@@ -44,5 +45,38 @@ public class UserController {
             return new AddFamilyDTO.acceptFamily(user, family);
         }
         return new AddFamilyDTO.acceptFamily(user, null);
+    }
+
+    @GetMapping("/fillInfo")
+    @ApiOperation(value = "약 복용 일지 조회 엔드 포인트 (마이 페이지)")
+    public List<GetFillDTO> getFillInfo(@ApiIgnore Principal principal) {
+        UserDTO user = customUserDetailService.findUser(principal);
+        return oldService.getFillInfo(user.getId());
+    }
+
+//    @PatchMapping("/fillInfo/{fillId}")
+//    @ApiOperation(value = "약 복용 일지 수정 엔드 포인트")
+//    public List<GetFillDTO> editFillInfo(@ApiIgnore Principal principal, @PathVariable("fillId") long fillId, @RequestBody EditFillDTO editFillDTO) {
+//        UserDTO user = customUserDetailService.findUser(principal);
+//        userService.editFillInfo(user.getId(), fillId, editFillDTO);
+//        return oldService.getFillInfo(user.getId());
+//    }
+
+    @PatchMapping("/fillInfo/{fillId}")
+    @ApiOperation(value = "약 복용 일지 삭제 엔드 포인트")
+    public List<GetFillDTO> deleteFillInfo(@ApiIgnore Principal principal, @PathVariable("fillId") long fillId) {
+        UserDTO user = customUserDetailService.findUser(principal);
+        userService.deleteFillInfo(user.getId(), fillId);
+        return oldService.getFillInfo(user.getId());
+    }
+
+    @PostMapping("/fillInfo")
+    @ApiOperation(value = "약 복용 일지 추가 엔드 포인트")
+    public List<GetFillDTO> addFillInfo(@ApiIgnore Principal principal, @ModelAttribute AddFillDTO addFillDTO) {
+        UserDTO user = customUserDetailService.findUser(principal);
+        if(addFillDTO.getFills().size() > 0){
+            userService.addFill(addFillDTO, user.getId());
+        }
+        return oldService.getFillInfo(user.getId());
     }
 }

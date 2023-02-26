@@ -123,4 +123,31 @@ public class UserService {
         userRepository.save(family);
         return UserDTO.fromEntity(family);
     }
+
+//    public void editFillInfo(long userId, long fillId, EditFillDTO editFillDTO){
+//        User user = userRepository.findById(userId).get();
+//        List<UserFill> userFills = userFillRepository.findByUser(user);
+//        for(int i=0; i<userFills.size(); i++){
+//            if(userFills.get(i).getFill().getId() == fillId){
+//                Fill fill = new Fill();
+//
+//                userFills.get(i).getFill().setFillName(editFillDTO.getFillName());
+//                userFills.get(i).getFill().setFillTime(editFillDTO.getFillTime());
+//                fill.setFillTime(editFillDTO.getFillTime());
+//                fill.setFillName(editFillDTO.getFillName());
+//                fill.setUsers(user);
+//                fillRepository.save(fill);
+//            }
+//        }
+//    }
+
+    public void deleteFillInfo(long userId, long fillId) {
+        User user = userRepository.findById(userId).get();
+        List<UserFill> userFills = userFillRepository.findByUser(user);
+        for(int i=0; i<userFills.size(); i++){
+            if(userFills.get(i).getFill().getId() == fillId){
+                userFillRepository.delete(userFills.get(i));
+            }
+        }
+    }
 }
