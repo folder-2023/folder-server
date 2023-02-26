@@ -62,7 +62,7 @@ public class UserController {
 //        return oldService.getFillInfo(user.getId());
 //    }
 
-    @PatchMapping("/fillInfo/{fillId}")
+    @DeleteMapping("/fillInfo/{fillId}")
     @ApiOperation(value = "약 복용 일지 삭제 엔드 포인트")
     public List<GetFillDTO> deleteFillInfo(@ApiIgnore Principal principal, @PathVariable("fillId") long fillId) {
         UserDTO user = customUserDetailService.findUser(principal);
