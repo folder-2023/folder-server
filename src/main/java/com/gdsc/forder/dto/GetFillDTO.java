@@ -18,6 +18,9 @@ import java.util.List;
 @ApiModel
 public class GetFillDTO {
 
+    @ApiModelProperty
+    private Long fillId;
+
     @ApiModelProperty()
     private String fillName;
 

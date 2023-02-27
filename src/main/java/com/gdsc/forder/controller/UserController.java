@@ -54,13 +54,13 @@ public class UserController {
         return oldService.getFillInfo(user.getId());
     }
 
-//    @PatchMapping("/fillInfo/{fillId}")
-//    @ApiOperation(value = "약 복용 일지 수정 엔드 포인트")
-//    public List<GetFillDTO> editFillInfo(@ApiIgnore Principal principal, @PathVariable("fillId") long fillId, @RequestBody EditFillDTO editFillDTO) {
-//        UserDTO user = customUserDetailService.findUser(principal);
-//        userService.editFillInfo(user.getId(), fillId, editFillDTO);
-//        return oldService.getFillInfo(user.getId());
-//    }
+    @PostMapping("/fillInfo/{fillId}")
+    @ApiOperation(value = "약 복용 일지 수정 엔드 포인트")
+    public List<GetFillDTO> editFillInfo(@ApiIgnore Principal principal, @PathVariable("fillId") long fillId, @RequestBody EditFillDTO editFillDTO) {
+        UserDTO user = customUserDetailService.findUser(principal);
+        userService.editFillInfo(user.getId(), fillId, editFillDTO);
+        return oldService.getFillInfo(user.getId());
+    }
 
     @DeleteMapping("/fillInfo/{fillId}")
     @ApiOperation(value = "약 복용 일지 삭제 엔드 포인트")

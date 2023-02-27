@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalTime;
 
 @Data
 @Getter
@@ -20,6 +19,6 @@ public class EditFillDTO {
     private String fillName;
 
     @ApiModelProperty(example = "12:00")
-    private LocalTime fillTime;
+    private String fillTime;
 
 }

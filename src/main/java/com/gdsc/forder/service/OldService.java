@@ -30,6 +30,7 @@ public class OldService {
         List<GetFillDTO> result = new ArrayList<>();
         for(int i=0; i<userFills.size(); i++){
             GetFillDTO fillDTO = new GetFillDTO();
+            fillDTO.setFillId(userFills.get(i).getFill().getId());
             fillDTO.setFillName(userFills.get(i).getFill().getFillName());
             fillDTO.setFillTime(userFills.get(i).getFill().getFillTime());
             fillDTO.setFillCheck(userFills.get(i).getFillCheck());

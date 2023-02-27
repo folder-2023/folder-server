@@ -124,22 +124,40 @@ public class UserService {
         return UserDTO.fromEntity(family);
     }
 
-//    public void editFillInfo(long userId, long fillId, EditFillDTO editFillDTO){
-//        User user = userRepository.findById(userId).get();
-//        List<UserFill> userFills = userFillRepository.findByUser(user);
-//        for(int i=0; i<userFills.size(); i++){
-//            if(userFills.get(i).getFill().getId() == fillId){
-//                Fill fill = new Fill();
-//
-//                userFills.get(i).getFill().setFillName(editFillDTO.getFillName());
-//                userFills.get(i).getFill().setFillTime(editFillDTO.getFillTime());
-//                fill.setFillTime(editFillDTO.getFillTime());
-//                fill.setFillName(editFillDTO.getFillName());
-//                fill.setUsers(user);
-//                fillRepository.save(fill);
-//            }
-//        }
-//    }
+    public void editFillInfo(long userId, long fillId, EditFillDTO editFillDTO){
+
+        String fillName = editFillDTO.getFillName();
+        String fillTime = editFillDTO.getFillTime();
+        LocalTime localTimeFill = LocalTime.parse(fillTime);
+
+        User user = userRepository.findById(userId).get();
+
+        //수정 대상 약
+        List<UserFill> beforeFill = userFillRepository.findByUser(user);
+
+        for (UserFill value : beforeFill) {
+            if (value.getFill().getId() == fillId) {
+                userFillRepository.delete(value);
+            }
+        }
+
+        Fill fill = new Fill();
+        fill.setFillTime(localTimeFill);
+        fill.setFillName(fillName);
+        //DB에 존재 하는 약
+        Fill existedFill = fillRepository.findByOption(fillName, localTimeFill);
+        UserFill userFill = new UserFill();
+        userFill.setUser(user);
+        if(existedFill != null){
+            userFill.setFill(existedFill);
+            userFillRepository.save(userFill);
+        }
+        else {
+            fillRepository.save(fill);
+            userFill.setFill(fill);
+            userFillRepository.save(userFill);
+        }
+    }
 
     public void deleteFillInfo(long userId, long fillId) {
         User user = userRepository.findById(userId).get();
