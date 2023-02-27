@@ -23,8 +23,6 @@ public class OldService {
     private final FillRepository fillRepository;
     private final UserFillRepository userFillRepository;
 
-//    private final ApplicationEventPublisher eventPublisher;
-
     public List<GetFillDTO> getFillInfo(Long userId){
         User user = userRepository.findById(userId).get();
         List<UserFill> userFills = userFillRepository.findByUser(user);
@@ -41,7 +39,7 @@ public class OldService {
         return result;
     }
 
-    public void checkfill(long userId, long fillId, Boolean accept){
+    public void checkFill(long userId, long fillId, Boolean accept){
         User user = userRepository.findById(userId).get();
         UserFill userFill = userFillRepository.findByOption(user, fillId);
         userFill.setFillCheck(accept);
@@ -58,5 +56,13 @@ public class OldService {
         getFillDTO.setFillCheck(userFill.getFillCheck());
         getFillDTO.setFillName(fill.getFillName());
         return getFillDTO;
+    }
+
+    public void resetFillCheck() {
+        List<UserFill> userFills = userFillRepository.findAll();
+        for(int i=0; i<userFills.size(); i++){
+            userFills.get(i).setFillCheck(false);
+            userFillRepository.save(userFills.get(i));
+        }
     }
 }

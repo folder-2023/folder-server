@@ -7,6 +7,8 @@ import com.gdsc.forder.service.OldService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -16,6 +18,7 @@ import java.util.List;
 @Api(tags = "메인 화면 API")
 @RestController
 @RequiredArgsConstructor
+@EnableScheduling
 @RequestMapping("/")
 public class MainController {
 
@@ -33,7 +36,16 @@ public class MainController {
     @PatchMapping("old/fillInfo/{fillId}")
     public GetFillDTO checkFill(@ApiIgnore Principal principal, @PathVariable("fillId") long fillId, @RequestParam("accept")Boolean accept){
         UserDTO user = customUserDetailService.findUser(principal);
-        oldService.checkfill(user.getId(), fillId, accept);
+        oldService.checkFill(user.getId(), fillId, accept);
         return oldService.getFillOne(user.getId(), fillId);
+    }
+
+
+    //매일 새벽 1시 복용 여부 false 로 초기화 해주기
+    //    @Scheduled(cron = "0 0 1 * * *")
+    @ApiOperation(value = "모든 회원들 약 복용 여부 자동 초기화")
+    @PatchMapping("old/fillInfo/schedule")
+    public void resetFillCheck(){
+        oldService.resetFillCheck();
     }
 }
