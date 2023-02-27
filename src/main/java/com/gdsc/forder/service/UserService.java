@@ -132,27 +132,27 @@ public class UserService {
 
         User user = userRepository.findById(userId).get();
 
-        //수정 대상 약
-        List<UserFill> beforeFill = userFillRepository.findByUser(user);
-
-        for (UserFill value : beforeFill) {
-            if (value.getFill().getId() == fillId) {
-                userFillRepository.delete(value);
-            }
-        }
-
-        Fill fill = new Fill();
-        fill.setFillTime(localTimeFill);
-        fill.setFillName(fillName);
-        //DB에 존재 하는 약
-        Fill existedFill = fillRepository.findByOption(fillName, localTimeFill);
+        //수정할 정보로 userFill 엔티티 새롭게 생성
         UserFill userFill = new UserFill();
         userFill.setUser(user);
+
+        //수정 대상 약-유저 정보 삭제
+        UserFill beforeUserFill = userFillRepository.findByOption(user, fillId);
+        userFillRepository.delete(beforeUserFill);
+
+        //DB에 존재 하는 약
+        Fill existedFill = fillRepository.findByOption(fillName, localTimeFill);
+
         if(existedFill != null){
             userFill.setFill(existedFill);
             userFillRepository.save(userFill);
         }
+
+        //존재 하지 않는 약이면 fill 엔티티 새로 생성
         else {
+            Fill fill = new Fill();
+            fill.setFillTime(localTimeFill);
+            fill.setFillName(fillName);
             fillRepository.save(fill);
             userFill.setFill(fill);
             userFillRepository.save(userFill);
@@ -161,11 +161,7 @@ public class UserService {
 
     public void deleteFillInfo(long userId, long fillId) {
         User user = userRepository.findById(userId).get();
-        List<UserFill> userFills = userFillRepository.findByUser(user);
-        for(int i=0; i<userFills.size(); i++){
-            if(userFills.get(i).getFill().getId() == fillId){
-                userFillRepository.delete(userFills.get(i));
-            }
-        }
+        UserFill userFill = userFillRepository.findByOption(user, fillId);
+        userFillRepository.delete(userFill);
     }
 }

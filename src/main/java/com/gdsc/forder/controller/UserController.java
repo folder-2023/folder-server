@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PatchMapping("/family")
-    @ApiOperation(value = "보호자/대상 추가 수락여부 엔드포인트")
+    @ApiOperation(value = "보호자/대상 추가 수락 여부 엔드포인트")
     public AddFamilyDTO.acceptFamily addFamily(@ApiIgnore Principal principal, @RequestParam("accept")Boolean accept, @RequestParam("userCode")Long userCode ) {
         UserDTO user = customUserDetailService.findUser(principal);
         if(accept){

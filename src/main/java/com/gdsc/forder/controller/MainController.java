@@ -7,9 +7,7 @@ import com.gdsc.forder.service.OldService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
@@ -31,4 +29,11 @@ public class MainController {
         return oldService.getFillInfo(user.getId());
     }
 
+    @ApiOperation(value = "약 복용 여부 체크 엔드 포인트")
+    @PatchMapping("old/fillInfo/{fillId}")
+    public GetFillDTO checkFill(@ApiIgnore Principal principal, @PathVariable("fillId") long fillId, @RequestParam("accept")Boolean accept){
+        UserDTO user = customUserDetailService.findUser(principal);
+        oldService.checkfill(user.getId(), fillId, accept);
+        return oldService.getFillOne(user.getId(), fillId);
+    }
 }

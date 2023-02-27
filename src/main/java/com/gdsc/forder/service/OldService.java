@@ -1,13 +1,14 @@
 package com.gdsc.forder.service;
 
 
+import com.gdsc.forder.domain.Fill;
 import com.gdsc.forder.domain.User;
 import com.gdsc.forder.domain.UserFill;
 import com.gdsc.forder.dto.GetFillDTO;
+import com.gdsc.forder.repository.FillRepository;
 import com.gdsc.forder.repository.UserFillRepository;
 import com.gdsc.forder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.List;
 public class OldService {
 
     private final UserRepository userRepository;
+    private final FillRepository fillRepository;
     private final UserFillRepository userFillRepository;
 
 //    private final ApplicationEventPublisher eventPublisher;
@@ -37,5 +39,24 @@ public class OldService {
             result.add(fillDTO);
         }
         return result;
+    }
+
+    public void checkfill(long userId, long fillId, Boolean accept){
+        User user = userRepository.findById(userId).get();
+        UserFill userFill = userFillRepository.findByOption(user, fillId);
+        userFill.setFillCheck(accept);
+        userFillRepository.save(userFill);
+    }
+
+    public GetFillDTO getFillOne(long userId, long fillId){
+        User user = userRepository.findById(userId).get();
+        Fill fill = fillRepository.findById(fillId).get();
+        UserFill userFill = userFillRepository.findByOption(user, fillId);
+        GetFillDTO getFillDTO = new GetFillDTO();
+        getFillDTO.setFillId(fillId);
+        getFillDTO.setFillTime(fill.getFillTime());
+        getFillDTO.setFillCheck(userFill.getFillCheck());
+        getFillDTO.setFillName(fill.getFillName());
+        return getFillDTO;
     }
 }

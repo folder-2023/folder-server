@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserFillRepository extends JpaRepository<UserFill, Long> {
+public interface UserFillRepository extends JpaRepository<UserFill, Long>, UserFillRepositoryCustom {
     List<UserFill> findByUser(User user);
 }

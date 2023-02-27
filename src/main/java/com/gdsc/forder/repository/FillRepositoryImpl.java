@@ -14,7 +14,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class FillRepositoryImpl implements FillRepositoryCustom {
 
-    private JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public Fill findByOption(String fillName, LocalTime fillTime) {
