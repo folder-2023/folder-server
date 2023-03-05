@@ -63,6 +63,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<UserFill> fills = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user")
+    private List<Calendar> calendar = new ArrayList<>();
+
     @PrePersist
     public void setUserCode(){
         long random = LocalTime.now().getNano();

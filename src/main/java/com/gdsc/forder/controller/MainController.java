@@ -1,11 +1,15 @@
 package com.gdsc.forder.controller;
 
+import com.gdsc.forder.domain.User;
+import com.gdsc.forder.dto.AddCalendarDTO;
+import com.gdsc.forder.dto.GetCalendarDTO;
 import com.gdsc.forder.dto.GetFillDTO;
 import com.gdsc.forder.dto.UserDTO;
 import com.gdsc.forder.service.CustomUserDetailService;
 import com.gdsc.forder.service.OldService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -47,5 +51,13 @@ public class MainController {
     @PatchMapping("old/fillInfo/schedule")
     public void resetFillCheck(){
         oldService.resetFillCheck();
+    }
+
+    @ApiOperation(value = "일정 등록 엔드포인트")
+    @PostMapping("calendar")
+    public GetCalendarDTO getCalendar(@ApiIgnore Principal principal, @RequestBody AddCalendarDTO addCalendarDTO){
+        Long userId = customUserDetailService.findUser(principal).getId();
+        oldService.saveCalendar(userId, addCalendarDTO);
+        return oldService.getCalendar(userId);
     }
 }
