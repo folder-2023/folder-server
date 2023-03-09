@@ -124,9 +124,8 @@ public class OldService {
         return result;
     }
 
-    public GetCalendarDTO modeCalendar(Long userId, Long calendarId, AddCalendarDTO addCalendarDTO){
+    public GetCalendarDTO modeCalendar(Long calendarId, AddCalendarDTO addCalendarDTO){
 
-        User user = userRepository.findById(userId).get();
         Calendar calendar = calendarRepository.findById(calendarId).get();
 
         LocalDate date = LocalDate.parse(addCalendarDTO.getCalendarDate(), DateTimeFormatter.ISO_DATE);
@@ -147,5 +146,11 @@ public class OldService {
         result.setUserId(calendar.getUser().getId());
         result.setCalendarTime(calendar.getCalendarTime().toString());
         return result;
+    }
+
+    public List<GetCalendarDTO> delCalendar(Long userId, Long calendarId){
+        Calendar calendar = calendarRepository.findById(calendarId).get();
+        calendarRepository.delete(calendar);
+        return this.getCalendar(userId);
     }
 }

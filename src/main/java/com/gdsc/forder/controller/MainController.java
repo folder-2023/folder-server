@@ -69,15 +69,14 @@ public class MainController {
 
     @ApiOperation(value = "일정 수정 엔드 포인트")
     @PatchMapping("calendar/{calendarId}")
-    public GetCalendarDTO modCalendar(@ApiIgnore Principal principal, @PathVariable("calendarId") long calendarId, @RequestBody AddCalendarDTO addCalendarDTO){
-        Long userId = customUserDetailService.findUser(principal).getId();
-        return oldService.modeCalendar(userId, calendarId, addCalendarDTO);
+    public GetCalendarDTO modCalendar(@PathVariable("calendarId") long calendarId, @RequestBody AddCalendarDTO addCalendarDTO){
+        return oldService.modeCalendar(calendarId, addCalendarDTO);
     }
 
-//    @ApiOperation(value = "일정 삭제 엔드 포인트")
-//    @DeleteMapping("calendar/{calendarId}")
-//    public String delCalendar(@ApiIgnore Principal principal, @PathVariable("calendarId") long calendarId){
-//        Long userId = customUserDetailService.findUser(principal).getId();
-//
-//    }
+    @ApiOperation(value = "일정 삭제 엔드 포인트")
+    @DeleteMapping("calendar/{calendarId}")
+    public List<GetCalendarDTO>  delCalendar(@ApiIgnore Principal principal, @PathVariable("calendarId") long calendarId){
+        Long userId = customUserDetailService.findUser(principal).getId();
+        return oldService.delCalendar(userId, calendarId);
+    }
 }
