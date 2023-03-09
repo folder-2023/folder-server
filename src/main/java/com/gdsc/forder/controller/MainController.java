@@ -53,11 +53,17 @@ public class MainController {
         oldService.resetFillCheck();
     }
 
-    @ApiOperation(value = "일정 등록 엔드포인트")
+    @ApiOperation(value = "일정 등록 엔드 포인트")
     @PostMapping("calendar")
-    public GetCalendarDTO getCalendar(@ApiIgnore Principal principal, @RequestBody AddCalendarDTO addCalendarDTO){
+    public GetCalendarDTO saveCalendar(@ApiIgnore Principal principal, @RequestBody AddCalendarDTO addCalendarDTO){
         Long userId = customUserDetailService.findUser(principal).getId();
-        oldService.saveCalendar(userId, addCalendarDTO);
+        return oldService.saveCalendar(userId, addCalendarDTO);
+    }
+
+    @ApiOperation(value = "일정 조회 엔드 포인트")
+    @GetMapping("calendar")
+    public List<GetCalendarDTO> getCalendar(@ApiIgnore Principal principal){
+        Long userId = customUserDetailService.findUser(principal).getId();
         return oldService.getCalendar(userId);
     }
 }

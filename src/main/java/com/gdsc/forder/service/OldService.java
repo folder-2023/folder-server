@@ -77,7 +77,7 @@ public class OldService {
 
 
 
-    public void saveCalendar(Long userId, AddCalendarDTO addCalendarDTO){
+    public GetCalendarDTO saveCalendar(Long userId, AddCalendarDTO addCalendarDTO){
         User user = userRepository.findById(userId).get();
         Calendar calendar = new Calendar();
         calendar.setUser(user);
@@ -91,17 +91,36 @@ public class OldService {
         calendar.setCalendarTime(localTimeCalendar);
         calendar.setContent(addCalendarDTO.getContent());
         calendarRepository.save(calendar);
-    }
 
-    public GetCalendarDTO getCalendar(Long userId){
-        User user = userRepository.findById(userId).get();
-        Calendar calendar = calendarRepository.findByUser(user);
         GetCalendarDTO result = new GetCalendarDTO();
         result.setCalendarId(calendar.getCalendarId());
         result.setCalendarDate(calendar.getCalendarDate());
         result.setContent(calendar.getContent());
         result.setUserId(calendar.getUser().getId());
         result.setCalendarTime(calendar.getCalendarTime().toString());
+        return result;
+    }
+
+    public List<GetCalendarDTO> getCalendar(Long userId){
+
+        User user = userRepository.findById(userId).get();
+        List<Calendar> calendar = calendarRepository.findByUser(user);
+
+        List<GetCalendarDTO> result = new ArrayList<>();
+
+        if(!calendar.isEmpty()){
+            for(int i=0; i<calendar.size(); i++){
+                GetCalendarDTO calendarDTO = new GetCalendarDTO();
+
+                calendarDTO.setCalendarId(calendar.get(i).getCalendarId());
+                calendarDTO.setCalendarDate(calendar.get(i).getCalendarDate());
+                calendarDTO.setContent(calendar.get(i).getContent());
+                calendarDTO.setCalendarTime(calendar.get(i).getCalendarTime().toString());
+
+                calendarDTO.setUserId(userId);
+                result.add(calendarDTO);
+            }
+        }
         return result;
     }
 }
