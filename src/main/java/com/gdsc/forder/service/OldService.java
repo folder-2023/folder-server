@@ -123,4 +123,29 @@ public class OldService {
         }
         return result;
     }
+
+    public GetCalendarDTO modeCalendar(Long userId, Long calendarId, AddCalendarDTO addCalendarDTO){
+
+        User user = userRepository.findById(userId).get();
+        Calendar calendar = calendarRepository.findById(calendarId).get();
+
+        LocalDate date = LocalDate.parse(addCalendarDTO.getCalendarDate(), DateTimeFormatter.ISO_DATE);
+        calendar.setCalendarDate(date);
+
+        String calendarTime = addCalendarDTO.getCalendarTime();
+        LocalTime localTimeCalendar= LocalTime.parse(calendarTime);
+
+        calendar.setCalendarTime(localTimeCalendar);
+        calendar.setContent(addCalendarDTO.getContent());
+
+        calendarRepository.save(calendar);
+
+        GetCalendarDTO result = new GetCalendarDTO();
+        result.setCalendarId(calendar.getCalendarId());
+        result.setCalendarDate(calendar.getCalendarDate());
+        result.setContent(calendar.getContent());
+        result.setUserId(calendar.getUser().getId());
+        result.setCalendarTime(calendar.getCalendarTime().toString());
+        return result;
+    }
 }
