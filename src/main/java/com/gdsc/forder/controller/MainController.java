@@ -1,6 +1,5 @@
 package com.gdsc.forder.controller;
 
-import com.gdsc.forder.domain.User;
 import com.gdsc.forder.dto.AddCalendarDTO;
 import com.gdsc.forder.dto.GetCalendarDTO;
 import com.gdsc.forder.dto.GetFillDTO;
@@ -9,11 +8,11 @@ import com.gdsc.forder.service.CustomUserDetailService;
 import com.gdsc.forder.service.OldService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.annotations.ApiResponse;
+import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
@@ -54,26 +53,42 @@ public class MainController {
     }
 
     @ApiOperation(value = "일정 등록 엔드 포인트")
-    @PostMapping("calendar")
+    @ApiResponse(
+            code = 200
+            , message = "calendarDTO 반환"
+    )
+    @PostMapping(value = "calendar")
     public GetCalendarDTO saveCalendar(@ApiIgnore Principal principal, @RequestBody AddCalendarDTO addCalendarDTO){
         Long userId = customUserDetailService.findUser(principal).getId();
         return oldService.saveCalendar(userId, addCalendarDTO);
     }
 
     @ApiOperation(value = "일정 조회 엔드 포인트")
+    @ApiResponse(
+            code = 200
+            , message = "calendarDTO List 반환"
+    )
     @GetMapping("calendar")
     public List<GetCalendarDTO> getCalendar(@ApiIgnore Principal principal){
         Long userId = customUserDetailService.findUser(principal).getId();
         return oldService.getCalendar(userId);
     }
 
-    @ApiOperation(value = "일정 수정 엔드 포인트")
+    @ApiOperation(value = "일정 수정 엔드 포인트", notes = "수정할 일정의 calendarId를 파라미터로 입력하고, 수정할 내용을 AddCalendarDTO에 맞춰서 작성한다.")
+    @ApiResponse(
+            code = 200
+            , message = "calendarDTO List 반환"
+    )
     @PatchMapping("calendar/{calendarId}")
     public GetCalendarDTO modCalendar(@PathVariable("calendarId") long calendarId, @RequestBody AddCalendarDTO addCalendarDTO){
         return oldService.modeCalendar(calendarId, addCalendarDTO);
     }
 
-    @ApiOperation(value = "일정 삭제 엔드 포인트")
+    @ApiOperation(value = "일정 삭제 엔드 포인트", notes = "삭제할 일정의 calendarId를 파라미터로 전송한다.")
+    @ApiResponse(
+            code = 200
+            , message = "calendarDTO List 반환"
+    )
     @DeleteMapping("calendar/{calendarId}")
     public List<GetCalendarDTO>  delCalendar(@ApiIgnore Principal principal, @PathVariable("calendarId") long calendarId){
         Long userId = customUserDetailService.findUser(principal).getId();

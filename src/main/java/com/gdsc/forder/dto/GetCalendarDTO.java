@@ -27,10 +27,10 @@ public class GetCalendarDTO {
     @ApiModelProperty()
     private String content;
 
-    @ApiModelProperty()
+    @ApiModelProperty(example = "12:30")
     private String calendarTime;
 
-    @ApiModelProperty()
+    @ApiModelProperty(example = "2023-03-10")
     private LocalDate calendarDate;
 
 }
