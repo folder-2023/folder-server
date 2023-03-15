@@ -3,19 +3,13 @@ package com.gdsc.forder.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.gdsc.forder.dto.PushNotificationRequest;
+import com.gdsc.forder.dto.PushNotificationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 @Service
-@PropertySource("classpath:application.properties")
 public class PushNotificationService {
-
-    @Value("#{${app.notifications.defaults}}")
-    private Map<String, String> defaults;
 
     private Logger logger = LoggerFactory.getLogger(PushNotificationService.class);
     private FCMService fcmService;
@@ -24,7 +18,7 @@ public class PushNotificationService {
         this.fcmService = fcmService;
     }
 
-    public void sendPushNotification(PushNotificationRequest request) {
+    public void sendPushNotification(PushNotificationDTO request) {
         try {
             fcmService.sendMessage(getSamplePayloadData(), request);
         } catch (Exception e) {
@@ -32,7 +26,7 @@ public class PushNotificationService {
         }
     }
 
-    public void sendPushNotificationWithoutData(PushNotificationRequest request) {
+    public void sendPushNotificationWithoutData(PushNotificationDTO request) {
         try {
             fcmService.sendMessageWithoutData(request);
         } catch (Exception e) {
@@ -41,7 +35,7 @@ public class PushNotificationService {
     }
 
 
-    public void sendPushNotificationToToken(PushNotificationRequest request) {
+    public void sendPushNotificationToToken(PushNotificationDTO request) {
         try {
             fcmService.sendMessageToToken(request);
         } catch (Exception e) {
@@ -56,6 +50,10 @@ public class PushNotificationService {
         pushData.put("text", "txt");
         pushData.put("user", "pankaj singh");
         return pushData;
+    }
+
+    private void subscribeTokenToTopic(String token, String topic){
+
     }
 
 

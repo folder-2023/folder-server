@@ -9,6 +9,8 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -44,6 +46,12 @@ public class JoinUserDTO {
     @ApiModelProperty(example = "보호자 여부 false/true")
     private Boolean guard;
 
+    @ApiModelProperty()
+    private List<String> fills = new ArrayList<>();
+
+    @ApiModelProperty()
+    private List<String> fillTimes = new ArrayList<>();
+
 
     @Builder
     public User toEntity(){
@@ -52,8 +60,8 @@ public class JoinUserDTO {
                 .username(username)
                 .password(password)
                 .phone(phone)
-                .wakeTime(wakeTime)
-                .sleepTime(sleepTime)
+//                .wakeTime(wakeTime)
+//                .sleepTime(sleepTime)
                 .guard(guard)
                 .build();
     }

@@ -71,7 +71,7 @@ public class UserService {
 
         List<Fill> fillList = new ArrayList<>();
 
-        List<String> fillNames = Arrays.asList(addFillDTO.getFills().get(0).split("\\|"));
+        List<String> fillNames = addFillDTO.getFills();
         List<LocalTime> fillTimes = StringToTimeConverter(addFillDTO.getFillTimes());
 
         for(int i=0; i<fillNames.size(); i++){
@@ -100,7 +100,8 @@ public class UserService {
     }
 
     public List<LocalTime> StringToTimeConverter(List<String> source) {
-        String[] fillTimes = source.get(0).split("\\|");
+        String[] fillTimes = source.toArray(new String[0]);
+
         List<LocalTime> result = new ArrayList<>();
         for (String s : fillTimes) {
             LocalTime localTime = LocalTime.parse(s);

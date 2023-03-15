@@ -19,10 +19,17 @@ public class Alarm {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
+    @Column(name = "title", length = 50)
+    private String title;
+
     @Column(name = "message", length = 50)
     private String message;
 
-    @Column(name = "situation", length = 50)
-    private String situation;
+    @Column(name = "topic", length = 50)
+    private String topic;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 
 }

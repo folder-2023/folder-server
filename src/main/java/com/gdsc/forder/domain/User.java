@@ -67,6 +67,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Calendar> calendar = new ArrayList<>();
 
+    @Column(name="fcm_token")
+    private long fcmToken;
+
     @PrePersist
     public void setUserCode(){
         long random = LocalTime.now().getNano();

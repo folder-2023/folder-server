@@ -75,8 +75,6 @@ public class OldService {
         }
     }
 
-
-
     public GetCalendarDTO saveCalendar(Long userId, AddCalendarDTO addCalendarDTO){
         User user = userRepository.findById(userId).get();
         Calendar calendar = new Calendar();
@@ -96,7 +94,6 @@ public class OldService {
         result.setCalendarId(calendar.getCalendarId());
         result.setCalendarDate(calendar.getCalendarDate());
         result.setContent(calendar.getContent());
-        result.setUserId(calendar.getUser().getId());
         result.setCalendarTime(calendar.getCalendarTime().toString());
         return result;
     }
@@ -117,7 +114,6 @@ public class OldService {
                 calendarDTO.setContent(calendar.get(i).getContent());
                 calendarDTO.setCalendarTime(calendar.get(i).getCalendarTime().toString());
 
-                calendarDTO.setUserId(userId);
                 result.add(calendarDTO);
             }
         }
@@ -143,7 +139,6 @@ public class OldService {
         result.setCalendarId(calendar.getCalendarId());
         result.setCalendarDate(calendar.getCalendarDate());
         result.setContent(calendar.getContent());
-        result.setUserId(calendar.getUser().getId());
         result.setCalendarTime(calendar.getCalendarTime().toString());
         return result;
     }

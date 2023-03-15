@@ -1,9 +1,12 @@
 package com.gdsc.forder.controller;
 
-import com.gdsc.forder.dto.PushNotificationRequest;
+import com.gdsc.forder.dto.PushNotificationDTO;
 import com.gdsc.forder.dto.PushNotificationResponse;
+import com.gdsc.forder.service.FCMService;
 import com.gdsc.forder.service.PushNotificationService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,34 +14,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @Api(tags = "푸시 알림 API")
 @RequestMapping("/fcm")
 @RestController
+@RequiredArgsConstructor
 public class FCMController {
 
-    private PushNotificationService pushNotificationService;
+    private final PushNotificationService pushNotificationService;
+    private final FCMService fcmService;
 
-    public FCMController(PushNotificationService pushNotificationService) {
-        this.pushNotificationService = pushNotificationService;
-    }
 
     @PostMapping("/notification/topic")
-    public ResponseEntity sendNotification(@RequestBody PushNotificationRequest request) {
+    public PushNotificationDTO sendNotification(@RequestBody PushNotificationDTO request) {
         pushNotificationService.sendPushNotificationWithoutData(request);
-        return new ResponseEntity<>(new PushNotificationResponse(HttpStatus.OK.value(), "Notification has been sent."), HttpStatus.OK);
+        return request;
     }
 
     @PostMapping("/notification/token")
-    public ResponseEntity sendTokenNotification(@RequestBody PushNotificationRequest request) {
+    public PushNotificationDTO sendTokenNotification(@RequestBody PushNotificationDTO request) {
         pushNotificationService.sendPushNotificationToToken(request);
-        return new ResponseEntity<>(new PushNotificationResponse(HttpStatus.OK.value(), "Notification has been sent."), HttpStatus.OK);
+        return request;
     }
 
-    @PostMapping("/notification/data")
-    public ResponseEntity sendDataNotification(@RequestBody PushNotificationRequest request) {
-        pushNotificationService.sendPushNotification(request);
-        return new ResponseEntity<>(new PushNotificationResponse(HttpStatus.OK.value(), "Notification has been sent."), HttpStatus.OK);
-    }
-
+    /**
+     * 알림 언제?
+     * 아침점심저녁 밥 먹으라고
+     * 하루 마무리에 약 복용 확인
+     */
 
 }

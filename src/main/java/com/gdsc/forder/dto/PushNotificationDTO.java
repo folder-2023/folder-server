@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 @Getter
 @NoArgsConstructor
-public class PushNotificationRequest {
+public class PushNotificationDTO {
 
     private String title;
     private String message;

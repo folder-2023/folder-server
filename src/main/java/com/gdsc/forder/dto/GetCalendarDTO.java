@@ -21,9 +21,6 @@ public class GetCalendarDTO {
     @ApiModelProperty
     private Long calendarId;
 
-    @ApiModelProperty
-    private Long userId;
-
     @ApiModelProperty()
     private String content;
 

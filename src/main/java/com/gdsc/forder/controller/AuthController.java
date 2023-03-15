@@ -41,16 +41,23 @@ public class AuthController {
     )
     @ApiOperation(value = "회원가입 엔드포인트" , notes =
             "JoinUserDTO에 맞춰서 requestBody로 회원정보를 입력한다." +
-                    "약 정보는 string list로 입력하고 parameter로 보낸다 " +
-            "fillTimes는 HH:mm 형식으로 작성한다. ")
-    public SignInDTO join(@Valid @RequestBody JoinUserDTO joinUserDTO, @ModelAttribute AddFillDTO addFillDTO) throws Exception {
+                    "fills와 fillTimes (HH:mm) 는 string 배열로 보낸다.")
+    public SignInDTO join(@Valid @RequestBody JoinUserDTO joinUserDTO) throws Exception {
 
         UserDTO user = userService.singUp(joinUserDTO);
         Long userId = user.getId();
 
-        if(addFillDTO.getFills().size() > 0){
+        AddFillDTO addFillDTO = new AddFillDTO();
+
+        if(joinUserDTO.getFills().size() > 0){
+            addFillDTO.setFills(joinUserDTO.getFills());
+            addFillDTO.setFillTimes(joinUserDTO.getFillTimes());
             userService.addFill(addFillDTO, userId);
         }
+
+//        if(addFillDTO.getFills().size() > 0){
+//            userService.addFill(addFillDTO, userId);
+//        }
 
         LoginUserDTO loginUserDTO = new LoginUserDTO();
         loginUserDTO.setLoginId(joinUserDTO.getLoginId());
@@ -59,6 +66,7 @@ public class AuthController {
 
         return new SignInDTO(accessToken, user);
     }
+
 
     @PostMapping("/login")
     @ApiResponse(
