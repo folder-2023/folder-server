@@ -39,7 +39,6 @@ public class UserService {
             throw new Exception("비밀번호가 일치하지 않습니다.");
         }
 
-
         User user = userRepository.save(joinUserDTO.toEntity());
         if(user.getGuard()){
             user.setRole(Role.ROLE_GUARD);
@@ -52,7 +51,7 @@ public class UserService {
         return UserDTO.fromEntity(user);
     }
 
-    public String login(LoginUserDTO users) {
+    public LoginResponse login(LoginUserDTO users) {
         User user = userRepository.findByLoginId(users.getLoginId())
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 아이디 입니다."));
 
@@ -64,7 +63,15 @@ public class UserService {
         List<String> roles = new ArrayList<>();
         roles.add(user.getRoles().toString());
 
-        return jwtTokenProvider.createToken(user.getLoginId(), roles);
+        String accessToken = jwtTokenProvider.createToken(user.getLoginId(), roles);
+        Boolean guard = user.getGuard();
+        long userId = user.getId();
+
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setUserId(userId);
+        loginResponse.setGuard(guard);
+        loginResponse.setAccessToken(accessToken);
+        return loginResponse;
     }
 
     public void addFill(AddFillDTO addFillDTO, Long userId) {

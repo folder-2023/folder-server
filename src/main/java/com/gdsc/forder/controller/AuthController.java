@@ -62,7 +62,7 @@ public class AuthController {
         LoginUserDTO loginUserDTO = new LoginUserDTO();
         loginUserDTO.setLoginId(joinUserDTO.getLoginId());
         loginUserDTO.setPassword(joinUserDTO.getPassword());
-        String accessToken = userService.login(loginUserDTO);
+        String accessToken = userService.login(loginUserDTO).getAccessToken();
 
         return new SignInDTO(accessToken, user);
     }
@@ -74,7 +74,7 @@ public class AuthController {
             , message = "accessToken 발급"
     )
     @ApiOperation(value = "로그인 엔드포인트", notes = "LoginUserDTO에 맞춰서 아이디와 비밀번호를 입력한다.")
-    public String login(@RequestBody LoginUserDTO loginUserDTO) {
+    public LoginResponse login(@RequestBody LoginUserDTO loginUserDTO) {
         return userService.login(loginUserDTO);
     }
 }
