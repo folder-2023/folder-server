@@ -32,12 +32,12 @@ public class OldService {
     private final UserFillRepository userFillRepository;
     private final CalendarRepository calendarRepository;
 
-    public List<GetFillDTO> getFillInfo(Long userId){
+    public List<GetFillDTO> getFillInfo(Long userId) {
         User user = userRepository.findById(userId).get();
         List<UserFill> userFills = userFillRepository.findByUser(user);
 
         List<GetFillDTO> result = new ArrayList<>();
-        for(int i=0; i<userFills.size(); i++){
+        for (int i = 0; i < userFills.size(); i++) {
             GetFillDTO fillDTO = new GetFillDTO();
             fillDTO.setFillId(userFills.get(i).getFill().getId());
             fillDTO.setFillName(userFills.get(i).getFill().getFillName());
@@ -48,14 +48,14 @@ public class OldService {
         return result;
     }
 
-    public void checkFill(long userId, long fillId, Boolean accept){
+    public void checkFill(long userId, long fillId, Boolean accept) {
         User user = userRepository.findById(userId).get();
         UserFill userFill = userFillRepository.findByOption(user, fillId);
         userFill.setFillCheck(accept);
         userFillRepository.save(userFill);
     }
 
-    public GetFillDTO getFillOne(long userId, long fillId){
+    public GetFillDTO getFillOne(long userId, long fillId) {
         User user = userRepository.findById(userId).get();
         Fill fill = fillRepository.findById(fillId).get();
         UserFill userFill = userFillRepository.findByOption(user, fillId);
@@ -67,15 +67,8 @@ public class OldService {
         return getFillDTO;
     }
 
-    public void resetFillCheck() {
-        List<UserFill> userFills = userFillRepository.findAll();
-        for(int i=0; i<userFills.size(); i++){
-            userFills.get(i).setFillCheck(false);
-            userFillRepository.save(userFills.get(i));
-        }
-    }
 
-    public GetCalendarDTO saveCalendar(Long userId, AddCalendarDTO addCalendarDTO){
+    public GetCalendarDTO saveCalendar(Long userId, AddCalendarDTO addCalendarDTO) {
         User user = userRepository.findById(userId).get();
         Calendar calendar = new Calendar();
         calendar.setUser(user);
@@ -84,7 +77,7 @@ public class OldService {
         calendar.setCalendarDate(date);
 
         String calendarTime = addCalendarDTO.getCalendarTime();
-        LocalTime localTimeCalendar= LocalTime.parse(calendarTime);
+        LocalTime localTimeCalendar = LocalTime.parse(calendarTime);
 
         calendar.setCalendarTime(localTimeCalendar);
         calendar.setContent(addCalendarDTO.getContent());
@@ -95,24 +88,26 @@ public class OldService {
         result.setCalendarDate(calendar.getCalendarDate());
         result.setContent(calendar.getContent());
         result.setCalendarTime(calendar.getCalendarTime().toString());
+        result.setCalendarCheck(false);
         return result;
     }
 
-    public List<GetCalendarDTO> getCalendar(Long userId){
+    public List<GetCalendarDTO> getCalendar(Long userId) {
 
         User user = userRepository.findById(userId).get();
         List<Calendar> calendar = calendarRepository.findByUser(user);
 
         List<GetCalendarDTO> result = new ArrayList<>();
 
-        if(!calendar.isEmpty()){
-            for(int i=0; i<calendar.size(); i++){
+        if (!calendar.isEmpty()) {
+            for (int i = 0; i < calendar.size(); i++) {
                 GetCalendarDTO calendarDTO = new GetCalendarDTO();
 
                 calendarDTO.setCalendarId(calendar.get(i).getCalendarId());
                 calendarDTO.setCalendarDate(calendar.get(i).getCalendarDate());
                 calendarDTO.setContent(calendar.get(i).getContent());
                 calendarDTO.setCalendarTime(calendar.get(i).getCalendarTime().toString());
+                calendarDTO.setCalendarCheck(calendar.get(i).getCalendarCheck());
 
                 result.add(calendarDTO);
             }
@@ -120,7 +115,7 @@ public class OldService {
         return result;
     }
 
-    public GetCalendarDTO modeCalendar(Long calendarId, AddCalendarDTO addCalendarDTO){
+    public GetCalendarDTO modeCalendar(Long calendarId, AddCalendarDTO addCalendarDTO) {
 
         Calendar calendar = calendarRepository.findById(calendarId).get();
 
@@ -128,7 +123,7 @@ public class OldService {
         calendar.setCalendarDate(date);
 
         String calendarTime = addCalendarDTO.getCalendarTime();
-        LocalTime localTimeCalendar= LocalTime.parse(calendarTime);
+        LocalTime localTimeCalendar = LocalTime.parse(calendarTime);
 
         calendar.setCalendarTime(localTimeCalendar);
         calendar.setContent(addCalendarDTO.getContent());
@@ -140,12 +135,43 @@ public class OldService {
         result.setCalendarDate(calendar.getCalendarDate());
         result.setContent(calendar.getContent());
         result.setCalendarTime(calendar.getCalendarTime().toString());
+
         return result;
     }
 
-    public List<GetCalendarDTO> delCalendar(Long userId, Long calendarId){
+    public List<GetCalendarDTO> delCalendar(Long userId, Long calendarId) {
         Calendar calendar = calendarRepository.findById(calendarId).get();
         calendarRepository.delete(calendar);
+        return this.getCalendar(userId);
+    }
+
+    public void resetFillCheck() {
+        List<UserFill> userFills = userFillRepository.findAll();
+        for (int i = 0; i < userFills.size(); i++) {
+            userFills.get(i).setFillCheck(false);
+            userFillRepository.save(userFills.get(i));
+        }
+    }
+
+    public List<GetFillDTO> modPillCheck(Long userId, Boolean pill) {
+        User user = userRepository.findById(userId).get();
+        List<UserFill> userFills = userFillRepository.findByUser(user);
+
+        for (int i = 0; i < userFills.size(); i++) {
+            userFills.get(i).setFillCheck(pill);
+            userFillRepository.save(userFills.get(i));
+        }
+        return this.getFillInfo(userId);
+    }
+
+    public List<GetCalendarDTO> modCalendarCheck(Long userId, Boolean calendar) {
+        User user = userRepository.findById(userId).get();
+        List<Calendar> calendars = calendarRepository.findByUser(user);
+
+        for(int i=0; i< calendars.size(); i++){
+            calendars.get(i).setCalendarCheck(calendar);
+            calendarRepository.save(calendars.get(i));
+        }
         return this.getCalendar(userId);
     }
 }

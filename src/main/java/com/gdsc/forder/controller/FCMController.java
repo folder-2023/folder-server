@@ -29,8 +29,6 @@ import java.util.Map;
 public class FCMController {
 
     private final PushNotificationService pushNotificationService;
-    private final FCMService fcmService;
-    private final ObjectMapper objectMapper;
 
     @ApiOperation(value = "주제(topic) 별 알림 전송 엔드 포인트", notes = "token 값 null 로 보내도 된다.")
     @PostMapping("/notification/topic")

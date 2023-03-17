@@ -52,6 +52,7 @@ public class MainController {
         oldService.resetFillCheck();
     }
 
+
     @ApiOperation(value = "일정 등록 엔드 포인트")
     @ApiResponse(
             code = 200

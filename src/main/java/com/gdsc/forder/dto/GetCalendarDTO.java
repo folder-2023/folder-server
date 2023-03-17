@@ -21,7 +21,7 @@ public class GetCalendarDTO {
     @ApiModelProperty
     private Long calendarId;
 
-    @ApiModelProperty()
+    @ApiModelProperty
     private String content;
 
     @ApiModelProperty(example = "12:30")
@@ -29,5 +29,8 @@ public class GetCalendarDTO {
 
     @ApiModelProperty(example = "2023-03-10")
     private LocalDate calendarDate;
+
+    @ApiModelProperty
+    private Boolean calendarCheck;
 
 }

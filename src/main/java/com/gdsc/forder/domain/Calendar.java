@@ -34,5 +34,7 @@ public class Calendar {
     @Column(name="calender_time")
     private LocalTime calendarTime;
 
+    @Column(name = "calender_check")
+    private Boolean calendarCheck;
 
 }
