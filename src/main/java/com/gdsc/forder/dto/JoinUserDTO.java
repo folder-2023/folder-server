@@ -6,6 +6,7 @@ import com.gdsc.forder.domain.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import java.time.LocalTime;
@@ -35,9 +36,11 @@ public class JoinUserDTO {
 
     private String phone;
 
+    @ApiModelProperty(example = "10:00")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="HH:mm", timezone="Asia/Seoul")
     private LocalTime wakeTime;
 
+    @ApiModelProperty(example = "22:30")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="HH:mm", timezone="Asia/Seoul")
     private LocalTime sleepTime;
 
@@ -60,8 +63,8 @@ public class JoinUserDTO {
                 .username(username)
                 .password(password)
                 .phone(phone)
-//                .wakeTime(wakeTime)
-//                .sleepTime(sleepTime)
+                .wakeTime(wakeTime)
+                .sleepTime(sleepTime)
                 .guard(guard)
                 .build();
     }

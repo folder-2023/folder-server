@@ -33,13 +33,15 @@ public class UserService {
 
     public UserDTO singUp(JoinUserDTO joinUserDTO) throws Exception {
         if (userRepository.findByLoginId(joinUserDTO.getLoginId()).isPresent()){
-            throw new Exception("이미 존재하는 아이디입니다.");
+            throw new IllegalArgumentException("이미 존재하는 아이디입니다.");
         }
         if (!joinUserDTO.getPassword().equals(joinUserDTO.getCheckedPassword())){
-            throw new Exception("비밀번호가 일치하지 않습니다.");
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
+
         User user = userRepository.save(joinUserDTO.toEntity());
+
         if(user.getGuard()){
             user.setRole(Role.ROLE_GUARD);
         }
@@ -116,6 +118,7 @@ public class UserService {
         }
         return result;
     }
+
 
     public String findByUserCode(Long userCode){
         User family = userRepository.findByUserCode(userCode).get();
