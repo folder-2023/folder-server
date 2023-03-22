@@ -17,7 +17,7 @@ public class AddFillDTO {
     @ApiModelProperty()
     private List<String> fills = new ArrayList<>();
 
-    @ApiModelProperty(example = "12:00")
+    @ApiModelProperty()
     private List<String> fillTimes = new ArrayList<>();
 
 }

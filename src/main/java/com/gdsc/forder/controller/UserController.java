@@ -71,8 +71,14 @@ public class UserController {
     }
 
     @PostMapping("/fillInfo")
-    @ApiOperation(value = "약 복용 일지 추가 엔드 포인트")
-    public List<GetFillDTO> addFillInfo(@ApiIgnore Principal principal, @ModelAttribute AddFillDTO addFillDTO) {
+    @ApiOperation(value = "약 복용 일지 추가 엔드 포인트", notes = "{\n" +
+            "  \"fillTimes\": [\"11:00\",\"12:30\"],\n" +
+            "  \"fills\": [\n" +
+            "    \"add1\",\n" +
+            "\"add2\"\n" +
+            "  ]\n" +
+            "} 형태로 작성")
+    public List<GetFillDTO> addFillInfo(@ApiIgnore Principal principal, @RequestBody AddFillDTO addFillDTO) {
         UserDTO user = customUserDetailService.findUser(principal);
         if(addFillDTO.getFills().size() > 0){
             userService.addFill(addFillDTO, user.getId());
