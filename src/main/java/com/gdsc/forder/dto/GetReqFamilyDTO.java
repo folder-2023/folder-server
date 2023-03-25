@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.annotation.Nullable;
+
 @Data
 @ApiModel
 @Builder
@@ -15,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class GetReqFamilyDTO {
 
 //친구요청한 유저의 이름
+    @Nullable()
     @ApiModelProperty(value = "요청한 유저의 이름")
     private String username;
     //친구요청한 유저의 코드

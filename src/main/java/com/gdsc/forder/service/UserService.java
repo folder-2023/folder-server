@@ -57,8 +57,11 @@ public class UserService {
     public GetReqFamilyDTO getFamily(long userId){
         //user가 요청대상임 (userFamily에서의 family)
         User user = userRepository.findById(userId).get();
-        UserFamily userFamily = userFamilyRepository.findByFamilyCode(user.getUserCode());
         GetReqFamilyDTO getReqFamilyDTO = new GetReqFamilyDTO();
+        UserFamily userFamily = userFamilyRepository.findByFamilyCode(user.getUserCode());
+        if(userFamily == null){
+         return getReqFamilyDTO;
+        }
         getReqFamilyDTO.setUsername(userFamily.getUserName());
         getReqFamilyDTO.setUserCode(userFamily.getUserCode());
         return getReqFamilyDTO;

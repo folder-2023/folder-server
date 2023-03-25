@@ -21,7 +21,7 @@ public class UserFamily {
     private String userName;
 
     //요청하는 유저의 코드
-    @Column(name = "user_code", unique = true)
+    @Column(name = "user_code")
     private long userCode;
 
     //요청 대상
@@ -29,7 +29,7 @@ public class UserFamily {
     private String familyName;
 
     //요청 대상의 코드
-    @Column(name = "family_code", unique = true)
+    @Column(name = "family_code")
     private long familyCode;
 
 
