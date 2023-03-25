@@ -84,4 +84,11 @@ public class AuthController {
     public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+    @ApiOperation(value = "fcmToken 저장 엔드포인트")
+    @PostMapping("/fcm")
+    public UserDTO fcm(@ApiIgnore Principal principal, @RequestBody String fcmToken){
+        UserDTO user = customUserDetailService.findUser(principal);
+        return userService.saveFcmToken(user.getId(), fcmToken);
+    }
 }

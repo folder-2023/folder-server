@@ -29,6 +29,12 @@ public class UserService {
     private final UserFillRepository userFillRepository;
     private final UserFamilyRepository userFamilyRepository;
 
+    public UserDTO saveFcmToken(long userId, String fcmToken){
+        User user = userRepository.findById(userId).get();
+        user.setFcmToken(fcmToken);
+        userRepository.save(user);
+        return UserDTO.fromEntity(user);
+    }
 
     public void reqFamily(long userId, String familyName, long userCode){
 
