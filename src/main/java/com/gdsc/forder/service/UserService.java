@@ -63,7 +63,7 @@ public class UserService {
          return getReqFamilyDTO;
         }
         getReqFamilyDTO.setUsername(userFamily.getUserName());
-        getReqFamilyDTO.setUserCode(userFamily.getUserCode());
+        getReqFamilyDTO.setUserFamilyId(userFamily.getUserFamilyId());
         return getReqFamilyDTO;
     }
 
@@ -161,13 +161,23 @@ public class UserService {
         return family.getUsername();
     }
 
-    public UserDTO addFamily(Long userId, Long userCode){
+    public UserDTO addFamily(Long userId, Long userFamilyId){
+
+        //로그인한 유저(userFamily에서는 family) - 요청대상
         User user = userRepository.findById(userId).get();
-        User family = userRepository.findByUserCode(userCode).get();
+
+        UserFamily userFamily = userFamilyRepository.findById(userFamilyId).get();
+
+
+        //요청한 가족
+        User family = userRepository.findByUserCode(userFamily.getUserCode()).get();
+
         user.setFamilyId(family.getId());
         userRepository.save(user);
         family.setFamilyId(userId);
         userRepository.save(family);
+
+        userFamilyRepository.delete(userFamily);
         return UserDTO.fromEntity(family);
     }
 

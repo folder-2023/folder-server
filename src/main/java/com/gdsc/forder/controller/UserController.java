@@ -1,5 +1,6 @@
 package com.gdsc.forder.controller;
 
+import com.gdsc.forder.domain.UserFamily;
 import com.gdsc.forder.dto.*;
 import com.gdsc.forder.service.CustomUserDetailService;
 import com.gdsc.forder.service.OldService;
@@ -38,7 +39,7 @@ public class UserController {
     }
 
     @GetMapping("/family")
-    @ApiOperation(value = "보호자/대상 추가 요청 조회 엔드 포인트")
+    @ApiOperation(value = "보호자/대상 추가 요청 조회 엔드 포인트", notes = "요청이 없으면 userFamilyId가 0, userName이 null로 뜬다.")
     public GetReqFamilyDTO getFamily(@ApiIgnore Principal principal) {
         UserDTO user = customUserDetailService.findUser(principal);
         return userService.getFamily(user.getId());
@@ -47,11 +48,11 @@ public class UserController {
     }
 
     @PatchMapping("/family")
-    @ApiOperation(value = "보호자/대상 추가 수락 여부 엔드 포인트", notes = "수락할 대상의 유저코드를 입력한다. 조회 엔드포인트에서 조회된 userCode")
-    public AddFamilyDTO.acceptFamily addFamily(@ApiIgnore Principal principal, @RequestParam("accept")Boolean accept, @RequestParam("userCode")Long userCode ) {
+    @ApiOperation(value = "보호자/대상 추가 수락 여부 엔드 포인트", notes = "수락할 요청의 userFamilyId를 입력한다.")
+    public AddFamilyDTO.acceptFamily addFamily(@ApiIgnore Principal principal, @RequestParam("accept")Boolean accept, @RequestParam("userFamilyId")Long userFamilyId ) {
         UserDTO user = customUserDetailService.findUser(principal);
         if(accept){
-            UserDTO family = userService.addFamily(user.getId(), userCode);
+            UserDTO family = userService.addFamily(user.getId(), userFamilyId);
             user.setFamilyId(family.getId());
             return new AddFamilyDTO.acceptFamily(user, family);
         }
