@@ -81,6 +81,7 @@ public class OldService {
 
         calendar.setCalendarTime(localTimeCalendar);
         calendar.setContent(addCalendarDTO.getContent());
+        calendar.setCalendarCheck(addCalendarDTO.getCalendarCheck());
         calendarRepository.save(calendar);
 
         GetCalendarDTO result = new GetCalendarDTO();
@@ -127,6 +128,7 @@ public class OldService {
 
         calendar.setCalendarTime(localTimeCalendar);
         calendar.setContent(addCalendarDTO.getContent());
+        calendar.setCalendarCheck(addCalendarDTO.getCalendarCheck());
 
         calendarRepository.save(calendar);
 
@@ -135,6 +137,7 @@ public class OldService {
         result.setCalendarDate(calendar.getCalendarDate());
         result.setContent(calendar.getContent());
         result.setCalendarTime(calendar.getCalendarTime().toString());
+        result.setCalendarCheck(calendar.getCalendarCheck());
 
         return result;
     }
