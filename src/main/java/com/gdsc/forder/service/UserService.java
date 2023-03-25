@@ -1,12 +1,10 @@
 package com.gdsc.forder.service;
 
-import com.gdsc.forder.domain.Fill;
-import com.gdsc.forder.domain.Role;
-import com.gdsc.forder.domain.User;
-import com.gdsc.forder.domain.UserFill;
+import com.gdsc.forder.domain.*;
 import com.gdsc.forder.dto.*;
 import com.gdsc.forder.provider.JwtTokenProvider;
 import com.gdsc.forder.repository.FillRepository;
+import com.gdsc.forder.repository.UserFamilyRepository;
 import com.gdsc.forder.repository.UserFillRepository;
 import com.gdsc.forder.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +14,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,6 +27,36 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
     private final UserFillRepository userFillRepository;
+    private final UserFamilyRepository userFamilyRepository;
+
+
+    public void reqFamily(long userId, String familyName, long userCode){
+
+        //친구를 요청 하는 유저
+        User user = userRepository.findById(userId).get();
+        UserFamily userFamily = new UserFamily();
+        userFamily.setUserName(user.getUsername());
+
+        //요청하는 유저의 유저코드
+        userFamily.setUserCode(user.getUserCode());
+
+        //요청 대상의 이름
+        userFamily.setFamilyName(familyName);
+
+        //요청 대상의 유저코드
+        userFamily.setFamilyCode(userCode);
+        userFamilyRepository.save(userFamily);
+    }
+
+    public GetReqFamilyDTO getFamily(long userId){
+        //user가 요청대상임 (userFamily에서의 family)
+        User user = userRepository.findById(userId).get();
+        UserFamily userFamily = userFamilyRepository.findByFamilyCode(user.getUserCode());
+        GetReqFamilyDTO getReqFamilyDTO = new GetReqFamilyDTO();
+        getReqFamilyDTO.setUsername(userFamily.getUserName());
+        getReqFamilyDTO.setUserCode(userFamily.getUserCode());
+        return getReqFamilyDTO;
+    }
 
     public UserDTO singUp(JoinUserDTO joinUserDTO) throws Exception {
         if (userRepository.findByLoginId(joinUserDTO.getLoginId()).isPresent()){
