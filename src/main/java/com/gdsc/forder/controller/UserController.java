@@ -91,9 +91,15 @@ public class UserController {
             "} 형태로 작성")
     public List<GetFillDTO> addFillInfo(@ApiIgnore Principal principal, @RequestBody AddFillDTO addFillDTO) {
         UserDTO user = customUserDetailService.findUser(principal);
-        if(addFillDTO.getFills().size() > 0){
+        if(user.getGuard() && user.getFamilyId() !=null){
+            userService.addFill(addFillDTO, user.getFamilyId());
+        }
+        else{
             userService.addFill(addFillDTO, user.getId());
         }
+//        if(addFillDTO.getFills().size() > 0){
+//            userService.addFill(addFillDTO, user.getId());
+//        }
         return oldService.getFillInfo(user.getId());
     }
 }

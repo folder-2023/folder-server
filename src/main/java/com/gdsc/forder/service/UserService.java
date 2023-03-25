@@ -208,7 +208,14 @@ public class UserService {
 
     public void deleteFillInfo(long userId, long fillId) {
         User user = userRepository.findById(userId).get();
-        UserFill userFill = userFillRepository.findByOption(user, fillId);
-        userFillRepository.delete(userFill);
+        if(user.getGuard() && user.getFamilyId() !=null){
+            User old = userRepository.findById(user.getFamilyId()).get();
+            UserFill userFill = userFillRepository.findByOption(old, fillId);
+            userFillRepository.delete(userFill);
+        }
+        else{
+            UserFill userFill = userFillRepository.findByOption(user, fillId);
+            userFillRepository.delete(userFill);
+        }
     }
 }
