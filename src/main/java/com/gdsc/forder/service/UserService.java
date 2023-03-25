@@ -164,13 +164,22 @@ public class UserService {
 
     public void editFillInfo(long userId, long fillId, EditFillDTO editFillDTO){
 
+        User user = userRepository.findById(userId).get();
+
+        if(user.getGuard() && user.getFamilyId() !=null){
+            User old = userRepository.findById(user.getFamilyId()).get();
+            this.editPiiInfo(old, fillId, editFillDTO);
+        }
+        else{
+            this.editPiiInfo(user, fillId, editFillDTO);
+        }
+    }
+
+    private void editPiiInfo(User user, long fillId, EditFillDTO editFillDTO){
+
         String fillName = editFillDTO.getFillName();
         String fillTime = editFillDTO.getFillTime();
         LocalTime localTimeFill = LocalTime.parse(fillTime);
-
-        User user = userRepository.findById(userId).get();
-
-        //수정할 정보로 userFill 엔티티 새롭게 생성
         UserFill userFill = new UserFill();
         userFill.setUser(user);
 
