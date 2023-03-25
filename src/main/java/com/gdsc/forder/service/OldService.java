@@ -32,10 +32,21 @@ public class OldService {
     private final UserFillRepository userFillRepository;
     private final CalendarRepository calendarRepository;
 
-    public List<GetFillDTO> getFillInfo(Long userId) {
-        User user = userRepository.findById(userId).get();
-        List<UserFill> userFills = userFillRepository.findByUser(user);
 
+    public List<GetFillDTO> getFillInfo(Long userId){
+        User user = userRepository.findById(userId).get();
+        if(user.getGuard() && user.getFamilyId() !=null){
+            User old = userRepository.findById(user.getFamilyId()).get();
+            List<UserFill> oldFills = userFillRepository.findByUser(old);
+            return this.getPillInfo(oldFills);
+        }
+        else{
+            List<UserFill> userFills = userFillRepository.findByUser(user);
+            return this.getPillInfo(userFills);
+        }
+    }
+
+    private List<GetFillDTO> getPillInfo(List<UserFill> userFills) {
         List<GetFillDTO> result = new ArrayList<>();
         for (int i = 0; i < userFills.size(); i++) {
             GetFillDTO fillDTO = new GetFillDTO();
@@ -48,22 +59,60 @@ public class OldService {
         return result;
     }
 
+//    public List<GetFillDTO> getFillInfo(Long userId) {
+//        User user = userRepository.findById(userId).get();
+//        List<UserFill> userFills = userFillRepository.findByUser(user);
+//
+//        List<GetFillDTO> result = new ArrayList<>();
+//        for (int i = 0; i < userFills.size(); i++) {
+//            GetFillDTO fillDTO = new GetFillDTO();
+//            fillDTO.setFillId(userFills.get(i).getFill().getId());
+//            fillDTO.setFillName(userFills.get(i).getFill().getFillName());
+//            fillDTO.setFillTime(userFills.get(i).getFill().getFillTime());
+//            fillDTO.setFillCheck(userFills.get(i).getFillCheck());
+//            result.add(fillDTO);
+//        }
+//        return result;
+//    }
+
     public void checkFill(long userId, long fillId, Boolean accept) {
         User user = userRepository.findById(userId).get();
-        UserFill userFill = userFillRepository.findByOption(user, fillId);
-        userFill.setFillCheck(accept);
-        userFillRepository.save(userFill);
+        if(user.getGuard() && user.getFamilyId() !=null){
+            User old = userRepository.findById(user.getFamilyId()).get();
+            UserFill userFill = userFillRepository.findByOption(old, fillId);
+            this.checkFillSave(userFill, accept);
+        }
+        else{
+            UserFill userFill = userFillRepository.findByOption(user, fillId);
+            this.checkFillSave(userFill, accept);
+        }
     }
 
-    public GetFillDTO getFillOne(long userId, long fillId) {
+    private void checkFillSave(UserFill userPill, Boolean accept){
+        userPill.setFillCheck(accept);
+        userFillRepository.save(userPill);
+    }
+
+    public GetFillDTO getPillOne(long userId, long fillId){
         User user = userRepository.findById(userId).get();
         Fill fill = fillRepository.findById(fillId).get();
-        UserFill userFill = userFillRepository.findByOption(user, fillId);
+        if(user.getGuard() && user.getFamilyId() != null){
+            User old = userRepository.findById(user.getFamilyId()).get();
+            UserFill userFill = userFillRepository.findByOption(old, fillId);
+            return this.getFillOne(userFill, fill);
+        }
+        else{
+            UserFill userFill = userFillRepository.findByOption(user, fillId);
+            return this.getFillOne(userFill, fill);
+        }
+    }
+
+    private GetFillDTO getFillOne(UserFill userFill, Fill pill) {
         GetFillDTO getFillDTO = new GetFillDTO();
-        getFillDTO.setFillId(fillId);
-        getFillDTO.setFillTime(fill.getFillTime());
+        getFillDTO.setFillId(pill.getId());
+        getFillDTO.setFillTime(pill.getFillTime());
         getFillDTO.setFillCheck(userFill.getFillCheck());
-        getFillDTO.setFillName(fill.getFillName());
+        getFillDTO.setFillName(pill.getFillName());
         return getFillDTO;
     }
 
@@ -90,16 +139,27 @@ public class OldService {
         result.setContent(calendar.getContent());
         result.setCalendarTime(calendar.getCalendarTime().toString());
         result.setCalendarCheck(false);
+        result.setUserId(userId);
+        result.setUserName(user.getUsername());
         return result;
     }
 
-    public List<GetCalendarDTO> getCalendar(Long userId) {
 
+    public List<GetCalendarDTO>  getCalendar(Long userId) {
         User user = userRepository.findById(userId).get();
-        List<Calendar> calendar = calendarRepository.findByUser(user);
+        if(user.getGuard() && user.getFamilyId() !=null){
+            User old = userRepository.findById(user.getFamilyId()).get();
+            List<Calendar> calendar = calendarRepository.findByUser(old);
+            return this.getCalendarDto(calendar);
+        }
+        else{
+            List<Calendar> calendar = calendarRepository.findByUser(user);
+            return this.getCalendarDto(calendar);
+        }
+    }
 
+    private List<GetCalendarDTO> getCalendarDto(List<Calendar> calendar){
         List<GetCalendarDTO> result = new ArrayList<>();
-
         if (!calendar.isEmpty()) {
             for (int i = 0; i < calendar.size(); i++) {
                 GetCalendarDTO calendarDTO = new GetCalendarDTO();
@@ -109,7 +169,8 @@ public class OldService {
                 calendarDTO.setContent(calendar.get(i).getContent());
                 calendarDTO.setCalendarTime(calendar.get(i).getCalendarTime().toString());
                 calendarDTO.setCalendarCheck(calendar.get(i).getCalendarCheck());
-
+                calendarDTO.setUserId(calendar.get(i).getUser().getId());
+                calendarDTO.setUserName(calendar.get(i).getUser().getUsername());
                 result.add(calendarDTO);
             }
         }
@@ -141,6 +202,7 @@ public class OldService {
 
         return result;
     }
+
 
     public List<GetCalendarDTO> delCalendar(Long userId, Long calendarId) {
         Calendar calendar = calendarRepository.findById(calendarId).get();

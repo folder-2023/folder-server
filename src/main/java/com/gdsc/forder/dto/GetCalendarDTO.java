@@ -33,4 +33,11 @@ public class GetCalendarDTO {
     @ApiModelProperty
     private Boolean calendarCheck;
 
+    @ApiModelProperty
+    private String userName;
+
+    @ApiModelProperty
+    private long userId;
+
+
 }
