@@ -35,12 +35,13 @@ public class MainController {
         return oldService.getFillInfo(user.getId());
     }
 
+
     @ApiOperation(value = "약 복용 여부 체크 엔드 포인트")
     @PatchMapping("old/fillInfo/{fillId}")
     public GetFillDTO checkFill(@ApiIgnore Principal principal, @PathVariable("fillId") long fillId, @RequestParam("accept")Boolean accept){
         UserDTO user = customUserDetailService.findUser(principal);
         oldService.checkFill(user.getId(), fillId, accept);
-        return oldService.getFillOne(user.getId(), fillId);
+        return oldService.getPillOne(user.getId(), fillId);
     }
 
 
@@ -63,6 +64,7 @@ public class MainController {
         Long userId = customUserDetailService.findUser(principal).getId();
         return oldService.saveCalendar(userId, addCalendarDTO);
     }
+
 
     @ApiOperation(value = "일정 조회 엔드 포인트")
     @ApiResponse(

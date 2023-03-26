@@ -67,8 +67,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Calendar> calendar = new ArrayList<>();
 
-//    @Column(name="fcm_token")
-//    private  fcmToken;
+    @Column(name="fcm_token", length = 200)
+    private String fcmToken;
 
     @PrePersist
     public void setUserCode(){

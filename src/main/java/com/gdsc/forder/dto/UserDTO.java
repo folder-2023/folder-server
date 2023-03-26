@@ -26,6 +26,8 @@ public class UserDTO {
     private String phone;
     private Long familyId;
     private Role roles;
+    private String fcmToken;
+    private Boolean guard;
 
     public static UserDTO fromEntity(User user){
         return UserDTO.builder()
@@ -38,6 +40,8 @@ public class UserDTO {
                 .phone(user.getPhone())
                 .familyId(user.getFamilyId())
                 .roles(user.getRole())
+                .fcmToken(user.getFcmToken())
+                .guard(user.getGuard())
                 .build();
     }
 }

@@ -7,6 +7,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -76,5 +78,17 @@ public class AuthController {
     @ApiOperation(value = "로그인 엔드포인트", notes = "LoginUserDTO에 맞춰서 아이디와 비밀번호를 입력한다.")
     public LoginResponse login(@RequestBody LoginUserDTO loginUserDTO) {
         return userService.login(loginUserDTO);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ApiOperation(value = "fcmToken 저장 엔드포인트", notes = "RequestBody에 fcmToken을 입력한다.")
+    @PostMapping("/fcm")
+    public UserDTO fcm(@ApiIgnore Principal principal, @RequestBody String fcmToken){
+        UserDTO user = customUserDetailService.findUser(principal);
+        return userService.saveFcmToken(user.getId(), fcmToken);
     }
 }

@@ -25,4 +25,8 @@ public class AddCalendarDTO {
     @ApiModelProperty(example = "2023-03-10")
     private String calendarDate;
 
+    @ApiModelProperty()
+    private Boolean calendarCheck;
+
+
 }
