@@ -120,7 +120,14 @@ public class OldService {
     public GetCalendarDTO saveCalendar(Long userId, AddCalendarDTO addCalendarDTO) {
         User user = userRepository.findById(userId).get();
         Calendar calendar = new Calendar();
-        calendar.setUser(user);
+
+        if(user.getGuard()){
+            User old = userRepository.findById(user.getFamilyId()).get();
+            calendar.setUser(old);
+        }
+        else{
+            calendar.setUser(user);
+        }
 
         LocalDate date = LocalDate.parse(addCalendarDTO.getCalendarDate(), DateTimeFormatter.ISO_DATE);
         calendar.setCalendarDate(date);
@@ -139,7 +146,7 @@ public class OldService {
         result.setContent(calendar.getContent());
         result.setCalendarTime(calendar.getCalendarTime().toString());
         result.setCalendarCheck(false);
-        result.setUserId(userId);
+        result.setUserId(calendar.getUser().getId());
         result.setUserName(user.getUsername());
         return result;
     }
@@ -149,12 +156,12 @@ public class OldService {
         User user = userRepository.findById(userId).get();
         if(user.getGuard() && user.getFamilyId() !=null){
             User old = userRepository.findById(user.getFamilyId()).get();
-            List<Calendar> calendar = calendarRepository.findByUser(old);
-            return this.getCalendarDto(calendar);
+            List<Calendar> oldCalendar = calendarRepository.findByUser(old);
+            return this.getCalendarDto(oldCalendar);
         }
-        else{
-            List<Calendar> calendar = calendarRepository.findByUser(user);
-            return this.getCalendarDto(calendar);
+        else {
+            List<Calendar> oldCalendar = calendarRepository.findByUser(user);
+            return this.getCalendarDto(oldCalendar);
         }
     }
 

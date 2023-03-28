@@ -25,7 +25,7 @@ public class AuthController {
     private final CustomUserDetailService customUserDetailService;
 
     @GetMapping("/me")
-    @ApiOperation(value = "개발용 토큰 확인 엔드포인트", notes = "header에 토큰을 넣었을 때 회원정보가 제대로 조회되는지 확인하는 엔드포인트")
+    @ApiOperation(value = "유저 정보 확인 엔드포인트", notes = "유저의 모든 정보를 조회한다.")
     public UserDTO getCurrentUser(@ApiIgnore Principal principal) {
         try{
             return customUserDetailService.findUser(principal);
