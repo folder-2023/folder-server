@@ -1,8 +1,12 @@
 package com.gdsc.forder.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gdsc.forder.domain.Alarm;
 import com.gdsc.forder.dto.PushNotificationDTO;
 import com.gdsc.forder.dto.PushNotificationResponse;
+import com.gdsc.forder.dto.UserDTO;
+import com.gdsc.forder.repository.AlarmRepository;
+import com.gdsc.forder.service.CustomUserDetailService;
 import com.gdsc.forder.service.FCMService;
 import com.gdsc.forder.service.PushNotificationService;
 import io.swagger.annotations.Api;
@@ -13,11 +17,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +35,8 @@ import java.util.Map;
 public class FCMController {
 
     private final PushNotificationService pushNotificationService;
+    private final CustomUserDetailService customUserDetailService;
+    private final AlarmRepository alarmRepository;
 
     @ApiOperation(value = "주제(topic) 별 알림 전송 엔드 포인트", notes = "token 값 null 로 보내도 된다.")
     @PostMapping("/notification/topic")
@@ -39,7 +47,14 @@ public class FCMController {
 
     @ApiOperation(value = "특정 기기 별 알림 전송 엔드 포인트", notes = "topic 값 null 로 보내도 된다.")
     @PostMapping("/notification/token")
-    public PushNotificationDTO sendTokenNotification(@RequestBody PushNotificationDTO request) {
+    public PushNotificationDTO sendTokenNotification(@ApiIgnore Principal principal, @RequestBody PushNotificationDTO request) {
+        UserDTO user = customUserDetailService.findUser(principal);
+        Alarm alarm = alarmRepository.findByUser(user.getUsername()+user.getId());
+        request.setToken(user.getFcmToken());
+        request.setMessage(alarm.getMessage());
+        request.setTitle(alarm.getTitle());
+        request.setTopic(alarm.getTopic());
+
         pushNotificationService.sendPushNotificationToToken(request);
         return request;
     }

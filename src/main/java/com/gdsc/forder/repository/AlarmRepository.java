@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     Alarm findByTitle(String title);
     Alarm findByTopic(String topic);
+    Alarm findByUser(String user);
 }
