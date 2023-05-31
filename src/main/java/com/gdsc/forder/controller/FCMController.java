@@ -61,6 +61,7 @@ public class FCMController {
         LocalTime time = LocalTime.now();
         String now = time.format(DateTimeFormatter.ofPattern("HH:mm:00"));
 
+        //알림 존재하면 현재 시간하고 비교해서 같으면 푸시알림
         if(alarm.isPresent() && alarm.get().getAlarmTime().equals(now)){
 
             request.setToken(user.getFcmToken());
@@ -71,8 +72,13 @@ public class FCMController {
             pushNotificationService.sendPushNotificationToToken(request);
             return request;
         }
-        else
+        else if(request != null){
+            pushNotificationService.sendPushNotificationToToken(request);
+            return request;
+        }
+        else{
             return null;
+        }
     }
 
     /**
