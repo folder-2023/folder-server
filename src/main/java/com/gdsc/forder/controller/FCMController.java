@@ -29,6 +29,7 @@ import java.security.Principal;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -56,30 +57,31 @@ public class FCMController {
     public PushNotificationDTO sendTokenNotification(@ApiIgnore Principal principal, @RequestBody PushNotificationDTO request) {
 
         UserDTO user = customUserDetailService.findUser(principal);
-        Optional<Alarm> alarm = alarmRepository.findByUser(user.getUsername()+user.getId());
+        List<Optional<Alarm>> alarm = alarmRepository.findByUser(user.getUsername()+user.getId());
 
         LocalTime time = LocalTime.now();
         String now = time.format(DateTimeFormatter.ofPattern("HH:mm:00"));
 
-        //알림 존재하면 현재 시간하고 비교해서 같으면 푸시알림
-        if(alarm.isPresent() && alarm.get().getAlarmTime().equals(now)){
-
-            request.setToken(user.getFcmToken());
-            request.setMessage(alarm.get().getMessage());
-            request.setTitle(alarm.get().getTitle());
-            request.setTopic(alarm.get().getTopic());
-
+//        //알림 존재하면 현재 시간하고 비교해서 같으면 푸시알림
+        if (alarm.size() > 0) {
+            for (int i = 0; i < alarm.size(); i++) {
+                if (alarm.get(i).get().getAlarmTime().equals(now)) {
+                    request.setToken(user.getFcmToken());
+                    request.setMessage(alarm.get(i).get().getMessage());
+                    request.setTitle(alarm.get(i).get().getTitle());
+                    request.setTopic(alarm.get(i).get().getTopic());
+                }
+            }
             pushNotificationService.sendPushNotificationToToken(request);
             return request;
-        }
-        else if(request != null){
+        } else if (request != null) {
             pushNotificationService.sendPushNotificationToToken(request);
             return request;
-        }
-        else{
+        } else {
             return null;
         }
     }
+
 
     /**
      * 알림 언제?
