@@ -34,6 +34,6 @@ public class Alarm {
     private String user;
 
     @Column(name = "alarm_time")
-    private LocalTime alarmTime;
+    private String alarmTime;
 
 }

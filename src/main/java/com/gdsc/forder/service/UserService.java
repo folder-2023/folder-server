@@ -127,7 +127,7 @@ public class UserService {
             alarm.setUser(user.getUsername()+userId);
             alarm.setTitle(fillNames.get(i));
             alarm.setMessage(fillNames.get(i) + " 복용할 시간 입니다. 잊지 마세요.");
-            alarm.setAlarmTime(fillTimes.get(i));
+            alarm.setAlarmTime(addFillDTO.getFillTimes().get(i));
             alarm.setTopic(fillNames.get(i) + fillTimes.get(i));
             alarmRepository.save(alarm);
 

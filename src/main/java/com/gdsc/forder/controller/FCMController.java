@@ -11,8 +11,10 @@ import com.gdsc.forder.service.FCMService;
 import com.gdsc.forder.service.PushNotificationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -24,8 +26,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.Principal;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Api(tags = "푸시 알림 API")
@@ -45,18 +50,29 @@ public class FCMController {
         return request;
     }
 
+
     @ApiOperation(value = "특정 기기 별 알림 전송 엔드 포인트", notes = "topic 값 null 로 보내도 된다.")
     @PostMapping("/notification/token")
     public PushNotificationDTO sendTokenNotification(@ApiIgnore Principal principal, @RequestBody PushNotificationDTO request) {
-        UserDTO user = customUserDetailService.findUser(principal);
-        Alarm alarm = alarmRepository.findByUser(user.getUsername()+user.getId());
-        request.setToken(user.getFcmToken());
-        request.setMessage(alarm.getMessage());
-        request.setTitle(alarm.getTitle());
-        request.setTopic(alarm.getTopic());
 
-        pushNotificationService.sendPushNotificationToToken(request);
-        return request;
+        UserDTO user = customUserDetailService.findUser(principal);
+        Optional<Alarm> alarm = alarmRepository.findByUser(user.getUsername()+user.getId());
+
+        LocalTime time = LocalTime.now();
+        String now = time.format(DateTimeFormatter.ofPattern("HH:mm:00"));
+
+        if(alarm.isPresent() && alarm.get().getAlarmTime().equals(now)){
+
+            request.setToken(user.getFcmToken());
+            request.setMessage(alarm.get().getMessage());
+            request.setTitle(alarm.get().getTitle());
+            request.setTopic(alarm.get().getTopic());
+
+            pushNotificationService.sendPushNotificationToToken(request);
+            return request;
+        }
+        else
+            return null;
     }
 
     /**

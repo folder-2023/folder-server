@@ -4,9 +4,11 @@ import com.gdsc.forder.domain.Alarm;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     Alarm findByTitle(String title);
     Alarm findByTopic(String topic);
-    Alarm findByUser(String user);
+    Optional<Alarm> findByUser(String user);
 }
