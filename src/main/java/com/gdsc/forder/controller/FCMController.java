@@ -1,36 +1,21 @@
 package com.gdsc.forder.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gdsc.forder.domain.Alarm;
 import com.gdsc.forder.dto.PushNotificationDTO;
-import com.gdsc.forder.dto.PushNotificationResponse;
 import com.gdsc.forder.dto.UserDTO;
 import com.gdsc.forder.repository.AlarmRepository;
 import com.gdsc.forder.service.CustomUserDetailService;
-import com.gdsc.forder.service.FCMService;
 import com.gdsc.forder.service.PushNotificationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.*;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.security.Principal;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 
@@ -50,7 +35,6 @@ public class FCMController {
         pushNotificationService.sendPushNotificationWithoutData(request);
         return request;
     }
-
 
     @ApiOperation(value = "특정 기기 별 알림 전송 엔드 포인트", notes = "topic 값 null 로 보내도 된다.")
     @PostMapping("/notification/token")
